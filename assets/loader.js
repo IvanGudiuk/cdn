@@ -7,6 +7,28 @@
 
   var isOpen = false;
 
+  var SUPPORT_ICON = `
+<svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+  <path d="M12 3C7.58 3 4 6.58 4 11V14C4 15.1 4.9 16 6 16H7V11H5C5 7.69 8.13 5 12 5C15.87 5 19 7.69 19 11H17V16H18C19.1 16 20 15.1 20 14V11C20 6.58 16.42 3 12 3Z" fill="currentColor"/>
+  <path d="M10 18H14C14 19.1 13.1 20 12 20C10.9 20 10 19.1 10 18Z" fill="currentColor"/>
+</svg>
+`;
+
+  var CLOSE_ICON = `
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+  <path
+    d="M18 6L6 18M6 6L18 18"
+    stroke="currentColor"
+    stroke-width="2.5"
+    stroke-linecap="round"
+  />
+</svg>
+`;
+
+  function updateButtonIcon() {
+    button.innerHTML = isOpen ? CLOSE_ICON : SUPPORT_ICON;
+  }
+
   iframe.src = "https://curly-scene-692e.pr-zt.workers.dev/widget.html";
   iframe.style.position = "fixed";
   iframe.style.bottom = "90px";
@@ -33,23 +55,18 @@
   applyMobile();
   window.addEventListener("resize", applyMobile);
 
-  var img = document.createElement("img");
-  img.src = "https://curly-scene-692e.pr-zt.workers.dev/support.png";
-  img.style.width = "100%";
-  img.style.height = "100%";
-  img.style.pointerEvents = "none";
-
   button.appendChild(img);
 
   // support button
-  // button.innerHTML = "💬";
+  button.innerHTML = SUPPORT_ICON;
   button.style.position = "fixed";
   button.style.bottom = "20px";
   button.style.right = "20px";
   button.style.width = "56px";
   button.style.height = "56px";
   button.style.borderRadius = "50%";
-  button.style.background = "linear-gradient(135deg, #6a7cff, #5b6cf2)";
+  button.style.background =
+    "-webkit-linear-gradient(90deg,#6a64f6,#a96ddf,#c77fcd,#a789c9); /* Chrome 10-25, Safari 5.1-6 */ background: linear-gradient(90deg,#6a64f6,#a96ddf,#c77fcd,#a789c9); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */";
   button.style.color = "white";
   button.style.display = "flex";
   button.style.alignItems = "center";
@@ -62,12 +79,14 @@
   button.onclick = function () {
     isOpen = !isOpen;
     iframe.style.display = isOpen ? "block" : "none";
+    updateButtonIcon();
   };
 
   window.addEventListener("message", function (e) {
     if (e.data && e.data.type === "MYCHAT_CLOSE") {
       isOpen = false;
       iframe.style.display = "none";
+      updateButtonIcon();
     }
   });
 

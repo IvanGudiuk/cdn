@@ -33,7 +33,19 @@
       .widget {
         width: 100%;
         height: 100%;
-        background: var(--bg);
+        background: radial-gradient(
+            120% 120% at 80% 0%,
+            rgba(130, 120, 255, 0.25) 0%,
+            rgba(130, 120, 255, 0.05) 40%,
+            rgba(255, 255, 255, 0) 70%
+          ),
+          linear-gradient(
+            180deg,
+            #ffffff 0%,
+            #f4f7ff 35%,
+            #e6eeff 65%,
+            #d8e5ff 100%
+          );
         border-radius: 16px;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
         display: flex;
@@ -45,8 +57,9 @@
       .header {
         background: linear-gradient(
           135deg,
-          var(--primary),
-          var(--primary-dark)
+          #5f6bff 0%,
+          #6a7cff 40%,
+          #4f5dff 100%
         );
         color: white;
         padding: 14px 16px;
@@ -130,6 +143,23 @@
         font-weight: 600;
         cursor: pointer;
       }
+      .powered {
+        padding: 10px 0;
+        text-transform: uppercase;
+        font-size: 14px;
+        color: rgba(157, 155, 155, 0.08);
+      }
+
+      .flex {
+        text-transform: capitalize;
+        font-weight: bold;
+        color: var(--text-dark);
+      }
+
+      .chat {
+        text-transform: capitalize;
+        color: var(--text-dark);
+      }
 
       button:hover {
         background: var(--primary-dark);
@@ -202,6 +232,12 @@
               />
             </svg>
           </button>
+        </div>
+        <div class="powered">
+          powered by
+          <a href="https://flex-chat.com" target="_blank"
+            ><span class="flex">Flex</span><span class="chat">Chat</span></a
+          >
         </div>
       </div>
     </div>
