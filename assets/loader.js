@@ -71,8 +71,6 @@
   applyMobile();
   window.addEventListener("resize", applyMobile);
 
-  button.appendChild(img);
-
   // support button
   button.innerHTML = SUPPORT_ICON;
   button.style.position = "fixed";
