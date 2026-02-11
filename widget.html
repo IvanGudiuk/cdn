@@ -6,6 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <style>
+      :root {
+        --primary: #6a7cff;
+        --primary-dark: #5b6cf2;
+        --bg: #f5f7ff;
+        --bubble-user: #6a7cff;
+        --bubble-agent: #ffffff;
+        --text-dark: #2b2f38;
+        --text-light: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
       html,
       body {
         margin: 0;
@@ -19,49 +33,183 @@
       .widget {
         width: 100%;
         height: 100%;
-        background: #fff;
-        border-radius: 12px;
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        background: var(--bg);
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
         display: flex;
         flex-direction: column;
         overflow: hidden;
       }
 
+      /* HEADER */
       .header {
-        background: #49f8af;
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
         color: white;
-        padding: 12px;
-        font-weight: 600;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
       }
 
+      .header-title {
+        font-weight: 600;
+        font-size: 15px;
+      }
+
+      .close-btn {
+        cursor: pointer;
+        font-size: 18px;
+        line-height: 1;
+        opacity: 0.9;
+      }
+
+      /* MESSAGES */
       .messages {
         flex: 1;
-        padding: 12px;
-        font-size: 14px;
-        color: #333;
+        padding: 16px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
       }
 
+      .message {
+        max-width: 80%;
+        padding: 10px 14px;
+        border-radius: 14px;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      .message.agent {
+        background: var(--bubble-agent);
+        color: var(--text-dark);
+        align-self: flex-start;
+        border-top-left-radius: 4px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      }
+
+      .message.user {
+        background: var(--bubble-user);
+        color: var(--text-light);
+        align-self: flex-end;
+        border-top-right-radius: 4px;
+      }
+
+      /* FOOTER */
       .footer {
-        border-top: 1px solid #eee;
-        padding: 8px;
+        padding: 10px;
+        background: #fff;
+        border-top: 1px solid #e5e7f2;
+      }
+
+      .input-wrap {
+        display: flex;
+        gap: 8px;
       }
 
       input {
-        width: 100%;
-        padding: 8px 10px;
-        border-radius: 8px;
-        border: 1px solid #ccc;
+        flex: 1;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
         outline: none;
+        font-size: 14px;
+      }
+
+      button {
+        background: var(--primary);
+        border: none;
+        color: white;
+        border-radius: 10px;
+        padding: 0 14px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: var(--primary-dark);
+      }
+
+      /* MOBILE */
+      @media (max-width: 480px) {
+        .widget {
+          border-radius: 0;
+        }
+      }
+
+      .send-btn {
+        background: var(--primary);
+        border: none;
+        color: white;
+        border-radius: 10px;
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+
+      .send-btn:hover {
+        background: var(--primary-dark);
+      }
+
+      .send-btn svg {
+        display: block;
       }
     </style>
   </head>
   <body>
     <div class="widget">
-      <div class="header">Support</div>
-      <div class="messages">👋 Hi! This is MyChat widget</div>
+      <div class="header">
+        <div class="header-title">Live Support</div>
+        <div class="close-btn" onclick="closeWidget()">×</div>
+      </div>
+
+      <div class="messages">
+        <div class="message agent">👋 Hi! How can we help you?</div>
+      </div>
+
       <div class="footer">
-        <input placeholder="Type a message..." />
+        <div class="input-wrap">
+          <input placeholder="Type a message..." />
+          <button class="send-btn" aria-label="Send message">
+            <svg
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M22 2L11 13"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M22 2L15 22L11 13L2 9L22 2Z"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
+
+    <script>
+      function closeWidget() {
+        parent.postMessage({ type: "MYCHAT_CLOSE" }, "*");
+      }
+    </script>
   </body>
 </html>
