@@ -5,6 +5,22 @@
   var iframe = document.createElement("iframe");
   var button = document.createElement("div");
 
+  var style = document.createElement("style");
+  style.innerHTML = `
+@keyframes mychat-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(106, 124, 255, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgba(106, 124, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(106, 124, 255, 0);
+  }
+}
+`;
+  document.head.appendChild(style);
+
   var isOpen = false;
 
   var SUPPORT_ICON = `
@@ -75,6 +91,7 @@
   button.style.cursor = "pointer";
   button.style.boxShadow = "0 12px 30px rgba(0,0,0,0.25)";
   button.style.zIndex = "999999";
+  button.style.animation = "pulse 2s infinite";
 
   button.onclick = function () {
     isOpen = !isOpen;
