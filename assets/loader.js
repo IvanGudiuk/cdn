@@ -80,7 +80,7 @@
   button.style.height = "56px";
   button.style.borderRadius = "50%";
   button.style.background =
-    "-webkit-linear-gradient(90deg,#6a64f6,#a96ddf,#c77fcd,#a789c9); /* Chrome 10-25, Safari 5.1-6 */ background: linear-gradient(90deg,#6a64f6,#a96ddf,#c77fcd,#a789c9); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */";
+    "linear-gradient(90deg, #6a64f6, #a96ddf, #c77fcd, #a789c9)";
   button.style.color = "white";
   button.style.display = "flex";
   button.style.alignItems = "center";

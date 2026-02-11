@@ -30,22 +30,25 @@
         background: transparent;
       }
 
+      a {
+        text-decoration: none;
+        transition: text-decoration 250 ease-in-out;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
       .widget {
         width: 100%;
         height: 100%;
-        background: radial-gradient(
-            120% 120% at 80% 0%,
-            rgba(130, 120, 255, 0.25) 0%,
-            rgba(130, 120, 255, 0.05) 40%,
-            rgba(255, 255, 255, 0) 70%
-          ),
-          linear-gradient(
-            180deg,
-            #ffffff 0%,
-            #f4f7ff 35%,
-            #e6eeff 65%,
-            #d8e5ff 100%
-          );
+        background: linear-gradient(
+          90deg,
+          #f5f7ff 0%,
+          #eef2ff 35%,
+          #e7eeff 65%,
+          #dfe8ff 100%
+        );
         border-radius: 16px;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
         display: flex;
@@ -145,24 +148,41 @@
       }
       .powered {
         padding: 10px 0;
+        text-align: center;
         text-transform: uppercase;
         font-size: 14px;
-        color: rgba(157, 155, 155, 0.08);
+        color: rgba(157, 155, 155, 1);
       }
 
       .flex {
         text-transform: capitalize;
         font-weight: bold;
+        font-size: 16px;
         color: var(--text-dark);
       }
 
       .chat {
         text-transform: capitalize;
+        font-size: 16px;
         color: var(--text-dark);
       }
 
       button:hover {
         background: var(--primary-dark);
+      }
+
+      #mychat-fullscreen-btn {
+        background: transparent;
+        border: none;
+        color: #555;
+        font-size: 18px;
+        cursor: pointer;
+      }
+
+      @media (max-width: 480px) {
+        #mychat-fullscreen-btn {
+          display: none;
+        }
       }
 
       /* MOBILE */
@@ -198,7 +218,8 @@
     <div class="widget">
       <div class="header">
         <div class="header-title">Live Support</div>
-        <div class="close-btn" onclick="closeWidget()">×</div>
+        <button id="mychat-fullscreen-btn" title="Toggle fullscreen">⛶</button>
+        <button class="close-btn" onclick="closeWidget()">×</button>
       </div>
 
       <div class="messages">
@@ -236,7 +257,7 @@
         <div class="powered">
           powered by
           <a href="https://flex-chat.com" target="_blank"
-            ><span class="flex">Flex</span><span class="chat">Chat</span></a
+            ><span class="flex">Flex </span><span class="chat">Chat</span></a
           >
         </div>
       </div>
