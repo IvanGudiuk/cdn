@@ -63,7 +63,7 @@
           #6a7cff 40%,
           #4f5dff 100%
         ); */
-        background: "linear-gradient(90deg, #6a64f6, #a96ddf, #c77fcd, #a789c9)";
+        background: linear-gradient(90deg, #6a64f6, #a96ddf, #c77fcd, #a789c9);
         color: white;
         padding: 14px 16px;
         display: flex;
@@ -140,6 +140,7 @@
       textarea {
         flex: 1;
         resize: none;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
         overflow-y: hidden;
         padding: 10px 12px;
         border-radius: 10px;
@@ -147,7 +148,7 @@
         outline: none;
         font-size: 14px;
         line-height: 1.4;
-        max-height: calc(1.4em * 3 + 20px); /* 3 строки */
+        max-height: calc(1.4em * 3 + 20px);
       }
 
       button {
@@ -192,11 +193,11 @@
         cursor: pointer;
       }
 
-      @media (max-width: 480px) {
+      /* @media (max-width: 480px) {
         #mychat-fullscreen-btn {
           display: none;
         }
-      }
+      } */
 
       /* MOBILE */
       @media (max-width: 480px) {
@@ -215,6 +216,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        margin-top: auto;
         cursor: pointer;
       }
 
