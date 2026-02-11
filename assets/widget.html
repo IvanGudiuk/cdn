@@ -150,20 +150,20 @@
         padding: 10px 0;
         text-align: center;
         text-transform: uppercase;
-        font-size: 14px;
+        font-size: 12px;
         color: rgba(157, 155, 155, 1);
       }
 
       .flex {
         text-transform: capitalize;
         font-weight: bold;
-        font-size: 16px;
+        font-size: 14px;
         color: var(--text-dark);
       }
 
       .chat {
         text-transform: capitalize;
-        font-size: 16px;
+        font-size: 14px;
         color: var(--text-dark);
       }
 
@@ -174,9 +174,10 @@
       #mychat-fullscreen-btn {
         background: transparent;
         border: none;
-        color: #555;
+        color: #fff;
         font-size: 18px;
         cursor: pointer;
+        opacity: 0.9;
       }
 
       @media (max-width: 480px) {
@@ -212,14 +213,24 @@
       .send-btn svg {
         display: block;
       }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
     </style>
   </head>
   <body>
     <div class="widget">
       <div class="header">
         <div class="header-title">Live Support</div>
-        <button id="mychat-fullscreen-btn" title="Toggle fullscreen">⛶</button>
-        <button class="close-btn" onclick="closeWidget()">×</button>
+        <div class="header-actions">
+          <button id="mychat-fullscreen-btn" title="Toggle fullscreen">
+            ⛶
+          </button>
+          <button class="close-btn" onclick="closeWidget()">×</button>
+        </div>
       </div>
 
       <div class="messages">
@@ -257,7 +268,7 @@
         <div class="powered">
           powered by
           <a href="https://flex-chat.com" target="_blank"
-            ><span class="flex">Flex </span><span class="chat">Chat</span></a
+            ><span class="flex">Flex</span><span class="chat">Chat</span></a
           >
         </div>
       </div>

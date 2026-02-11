@@ -7,7 +7,7 @@
 
   var style = document.createElement("style");
   style.innerHTML = `
-@keyframes mychat-pulse {
+@keyframes pulse {
   0% {
     box-shadow: 0 0 0 0 rgba(106, 124, 255, 0.6);
   }
@@ -24,14 +24,14 @@
   var isOpen = false;
 
   var SUPPORT_ICON = `
-<svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+<svg viewBox="0 0 24 24" width="26" height="26" fill="none">
   <path d="M12 3C7.58 3 4 6.58 4 11V14C4 15.1 4.9 16 6 16H7V11H5C5 7.69 8.13 5 12 5C15.87 5 19 7.69 19 11H17V16H18C19.1 16 20 15.1 20 14V11C20 6.58 16.42 3 12 3Z" fill="currentColor"/>
   <path d="M10 18H14C14 19.1 13.1 20 12 20C10.9 20 10 19.1 10 18Z" fill="currentColor"/>
 </svg>
 `;
 
   var CLOSE_ICON = `
-<svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+<svg viewBox="0 0 24 24" width="22" height="22" fill="none">
   <path
     d="M18 6L6 18M6 6L18 18"
     stroke="currentColor"
@@ -43,6 +43,18 @@
 
   function updateButtonIcon() {
     button.innerHTML = isOpen ? CLOSE_ICON : SUPPORT_ICON;
+  }
+
+  function isMobile() {
+    return window.innerWidth <= 480;
+  }
+
+  function updateButtonVisibility() {
+    if (isMobile() && isOpen) {
+      button.style.display = "none";
+    } else {
+      button.style.display = "flex";
+    }
   }
 
   iframe.src = "https://curly-scene-692e.pr-zt.workers.dev/widget.html";
@@ -57,27 +69,44 @@
   iframe.style.display = "none";
   iframe.style.background = "transparent";
 
-  // mobile fullscreen
-  function applyMobile() {
-    if (window.innerWidth <= 480) {
-      iframe.style.width = "100vw";
-      iframe.style.height = "100vh";
-      iframe.style.right = "0";
-      iframe.style.bottom = "0";
-      iframe.style.borderRadius = "0";
-    }
+  // desktop fullscreen
+  function applyDesktop() {
+    iframe.style.width = DESKTOP_STYLE.width;
+    iframe.style.height = DESKTOP_STYLE.height;
+    iframe.style.right = DESKTOP_STYLE.right;
+    iframe.style.bottom = DESKTOP_STYLE.bottom;
+    iframe.style.borderRadius = DESKTOP_STYLE.borderRadius;
   }
 
-  applyMobile();
-  window.addEventListener("resize", applyMobile);
+  // mobile fullscreen
+  function applyMobile() {
+    iframe.style.width = "100vw";
+    iframe.style.height = "100vh";
+    iframe.style.right = "0";
+    iframe.style.bottom = "0";
+    iframe.style.borderRadius = "0";
+  }
+
+  function updateLayout() {
+    if (window.innerWidth <= 480) {
+      applyMobile();
+    } else {
+      applyDesktop();
+    }
+
+    updateButtonVisibility();
+  }
+
+  updateLayout();
+  window.addEventListener("resize", updateLayout);
 
   // support button
   button.innerHTML = SUPPORT_ICON;
   button.style.position = "fixed";
   button.style.bottom = "20px";
   button.style.right = "20px";
-  button.style.width = "56px";
-  button.style.height = "56px";
+  button.style.width = "60px";
+  button.style.height = "60px";
   button.style.borderRadius = "50%";
   button.style.background =
     "linear-gradient(90deg, #6a64f6, #a96ddf, #c77fcd, #a789c9)";
@@ -95,6 +124,8 @@
     isOpen = !isOpen;
     iframe.style.display = isOpen ? "block" : "none";
     updateButtonIcon();
+    updateLayout();
+    updateButtonVisibility();
   };
 
   window.addEventListener("message", function (e) {
@@ -102,6 +133,7 @@
       isOpen = false;
       iframe.style.display = "none";
       updateButtonIcon();
+      updateButtonVisibility();
     }
   });
 
