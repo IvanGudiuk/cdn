@@ -5,7 +5,7 @@
 
   var iframe = document.createElement("iframe");
 
-  iframe.src = "https://mychat-widget.pages.dev/widget.html";
+  iframe.src = "https://curly-scene-692e.pr-zt.workers.dev/widget.html";
   iframe.style.position = "fixed";
   iframe.style.bottom = "20px";
   iframe.style.right = "20px";
