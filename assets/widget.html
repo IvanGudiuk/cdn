@@ -32,7 +32,6 @@
 
       a {
         text-decoration: none;
-        transition: text-decoration 250 ease-in-out;
       }
 
       a:hover {
@@ -177,7 +176,6 @@
         color: #fff;
         font-size: 18px;
         cursor: pointer;
-        opacity: 0.9;
       }
 
       @media (max-width: 480px) {
@@ -227,7 +225,39 @@
         <div class="header-title">Live Support</div>
         <div class="header-actions">
           <button id="mychat-fullscreen-btn" title="Toggle fullscreen">
-            ⛶
+            <svg
+              id="fullscreen-icon"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9 3H3V9"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M15 3H21V9"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M21 15V21H15"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M3 15V21H9"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
           </button>
           <button class="close-btn" onclick="closeWidget()">×</button>
         </div>
@@ -277,6 +307,20 @@
     <script>
       function closeWidget() {
         parent.postMessage({ type: "MYCHAT_CLOSE" }, "*");
+      }
+    </script>
+    <script>
+      const fsBtn = document.getElementById("mychat-fullscreen-btn");
+      const widget = document.querySelector(".widget");
+
+      if (fsBtn) {
+        fsBtn.addEventListener("click", () => {
+          if (!document.fullscreenElement) {
+            widget.requestFullscreen();
+          } else {
+            document.exitFullscreen();
+          }
+        });
       }
     </script>
   </body>

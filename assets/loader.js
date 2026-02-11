@@ -24,7 +24,7 @@
   var isOpen = false;
 
   var SUPPORT_ICON = `
-<svg viewBox="0 0 24 24" width="26" height="26" fill="none">
+<svg viewBox="0 0 24 24" width="30" height="30" fill="none">
   <path d="M12 3C7.58 3 4 6.58 4 11V14C4 15.1 4.9 16 6 16H7V11H5C5 7.69 8.13 5 12 5C15.87 5 19 7.69 19 11H17V16H18C19.1 16 20 15.1 20 14V11C20 6.58 16.42 3 12 3Z" fill="currentColor"/>
   <path d="M10 18H14C14 19.1 13.1 20 12 20C10.9 20 10 19.1 10 18Z" fill="currentColor"/>
 </svg>
