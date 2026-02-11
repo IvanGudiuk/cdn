@@ -41,6 +41,14 @@
 </svg>
 `;
 
+  var DESKTOP_STYLE = {
+    width: "360px",
+    height: "520px",
+    right: "20px",
+    bottom: "90px",
+    borderRadius: "16px",
+  };
+
   function updateButtonIcon() {
     button.innerHTML = isOpen ? CLOSE_ICON : SUPPORT_ICON;
   }
