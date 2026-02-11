@@ -160,6 +160,7 @@
         font-weight: 600;
         cursor: pointer;
       }
+
       .powered {
         padding: 10px 0;
         text-align: center;
@@ -181,9 +182,9 @@
         color: var(--text-dark);
       }
 
-      button:hover {
+      /* button:hover {
         background: var(--primary-dark);
-      }
+      } */
 
       #mychat-fullscreen-btn {
         background: transparent;
@@ -229,6 +230,7 @@
       }
 
       .header-actions {
+        width: fit-content;
         display: flex;
         align-items: center;
         gap: 8px;
@@ -275,7 +277,9 @@
               />
             </svg>
           </button>
-          <button class="close-btn" onclick="closeWidget()">×</button>
+          <button class="close-btn" onclick="closeWidget()" title="close">
+            ×
+          </button>
         </div>
       </div>
 
@@ -290,7 +294,11 @@
             placeholder="Type a message..."
             rows="1"
           ></textarea>
-          <button class="send-btn" aria-label="Send message">
+          <button
+            class="send-btn"
+            aria-label="Send message"
+            title="send message"
+          >
             <svg
               viewBox="0 0 24 24"
               width="18"
