@@ -9,25 +9,25 @@
     return;
   }
 
-  fetch("https://api.flex-chat.com/api/widget-access", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      siteId,
-    }),
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      if (!data.allowed) {
-        console.log("Widget blocked for this user");
-        return;
-      }
+  // fetch("https://api.flex-chat.com/api/widget-access", {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify({
+  //     siteId,
+  //   }),
+  // })
+  //   .then((res) => res.json())
+  //   .then((data) => {
+  //     if (!data.allowed) {
+  //       console.log("Widget blocked for this user");
+  //       return;
+  //     }
 
-      initWidget();
-    })
-    .catch(() => console.log("Access check failed"));
+  //     initWidget();
+  //   })
+  //   .catch(() => console.log("Access check failed"));
 
   function initWidget() {
     var iframe = document.createElement("iframe");
@@ -186,4 +186,6 @@
       mount();
     }
   }
+
+  initWidget();
 })();
