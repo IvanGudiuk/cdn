@@ -29,6 +29,7 @@
         /* border-radius: 16px; */
         font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
         background: transparent;
+        border: 1px solid rgba(gray, 0, 0, 0, 0.1);
       }
 
       a {
@@ -52,7 +53,6 @@
         /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06),
           0 12px 30px rgba(0, 0, 0, 0.08); */
         border-radius: 16px;
-        border: 1px solid rgba(gray, 0, 0, 0, 0.1);
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -202,9 +202,12 @@
         background: none;
         border: none;
         cursor: pointer;
-        color: #6a64f6;
         display: flex;
         align-items: center;
+      }
+
+      .chat-input-wrapper {
+        padding: 10px 0;
       }
 
       .file-preview {
@@ -375,7 +378,7 @@
               height="20"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="currentColor"
+              stroke="black"
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -554,6 +557,36 @@
 
       const attachBtn = document.getElementById("attachBtn");
 
+      function renderFileMessage(msg) {
+        const div = document.createElement("div");
+        div.className = `message ${msg.sender}`;
+
+        let contentHTML = "";
+
+        if (msg.content.type === "image") {
+          contentHTML = `
+      <img src="${msg.content.file.url}" 
+           style="max-width:150px; border-radius:8px;" />
+    `;
+        } else {
+          contentHTML = `
+      <a href="${msg.content.file.url}" target="_blank">
+        📎 ${msg.content.file.name}
+      </a>
+    `;
+        }
+
+        div.innerHTML = `
+    ${contentHTML}
+    <div style="font-size:11px; opacity:0.6; margin-top:4px;">
+      ${formatTime(msg.createdAt)}
+    </div>
+  `;
+
+        messagesContainer.appendChild(div);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+
       attachBtn.addEventListener("click", () => {
         fileInput.click();
       });
@@ -563,43 +596,44 @@
         if (!file) return;
 
         try {
-          // 1️⃣ Загружаем файл
           const formData = new FormData();
           formData.append("file", file);
 
-          const uploadRes = await fetch("/api/upload", {
-            method: "POST",
-            body: formData,
-          });
+          const uploadRes = await fetch(
+            "https://api.flex-chat.com/api/upload",
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
 
           const uploadData = await uploadRes.json();
 
-          // 2️⃣ Определяем тип
           const messageType = file.type.startsWith("image/") ? "image" : "file";
 
-          // 3️⃣ Отправляем сообщение
-          await fetch("/api/messages", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              content: {
-                type: messageType,
-                text: "",
-                siteId,
-                sender: "visitor",
-                file: {
-                  url: uploadData.url,
-                  name: file.name,
-                  size: file.size,
-                  mime: file.type,
-                },
+          const message = {
+            sender: "visitor",
+            siteId,
+            sessionId: session.sessionId,
+            createdAt: new Date().toISOString(),
+            content: {
+              type: messageType,
+              text: "",
+              file: {
+                url: uploadData.url,
+                name: file.name,
+                size: file.size,
+                mime: file.type,
               },
-            }),
-          });
+            },
+          };
 
-          // очищаем input
+          renderFileMessage(message);
+
+          saveMessage(message);
+
+          socket.emit("message", message);
+
           fileInput.value = "";
         } catch (err) {
           console.error("File send error:", err);
