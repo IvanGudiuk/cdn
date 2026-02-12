@@ -23,10 +23,8 @@
       html,
       body {
         margin: 0;
-        /* padding: 1px; */
         width: 100%;
         height: 100%;
-        /* border-radius: 16px; */
         font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
         background: transparent;
         border: 1px solid rgba(gray, 0, 0, 0, 0.1);
@@ -50,8 +48,8 @@
           #e7eeff 65%,
           #dfe8ff 100%
         );
-        /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06),
-          0 12px 30px rgba(0, 0, 0, 0.08); */
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25),
+          0 8px 20px rgba(0, 0, 0, 0.15);
         border-radius: 16px;
         display: flex;
         flex-direction: column;
@@ -124,13 +122,13 @@
       .input-wrap {
         display: flex;
         gap: 8px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
       }
 
       input {
         flex: 1;
         padding: 10px 12px;
-        border-radius: 10px;
-        border: 1px solid #ddd;
         outline: none;
         font-size: 14px;
       }
@@ -207,6 +205,7 @@
       }
 
       .chat-input-wrapper {
+        width: 100%;
         padding: 10px 0;
       }
 
@@ -369,34 +368,34 @@
               />
             </svg>
           </button>
-        </div>
-        <div class="chat-input-wrapper">
-          <button id="attachBtn" type="button" class="attach-btn">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="black"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path
-                d="M16.5 6.5l-7.79 7.79a4 4 0 105.66 5.66l8.49-8.49a6 6 0 10-8.49-8.49L5.88 11.47a2 2 0 102.83 2.83l7.07-7.07"
-              />
-            </svg>
-          </button>
+          <div class="chat-input-wrapper">
+            <button id="attachBtn" type="button" class="attach-btn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="black"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M16.5 6.5l-7.79 7.79a4 4 0 105.66 5.66l8.49-8.49a6 6 0 10-8.49-8.49L5.88 11.47a2 2 0 102.83 2.83l7.07-7.07"
+                />
+              </svg>
+            </button>
 
-          <input
-            id="fileInput"
-            type="file"
-            style="display: none"
-            accept="image/*,video/*,.pdf,.doc,.docx,.txt"
-          />
+            <input
+              id="fileInput"
+              type="file"
+              style="display: none"
+              accept="image/*,video/*,.pdf,.doc,.docx,.txt"
+            />
 
-          <div id="filePreview" class="file-preview"></div>
+            <div id="filePreview" class="file-preview"></div>
+          </div>
         </div>
         <div class="powered">
           powered by
