@@ -51,8 +51,7 @@
           #dfe8ff 100%
         );
         border-radius: 16px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06),
-          0 12px 30px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(0, 0, 0, 0.1);
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -229,13 +228,6 @@
         cursor: pointer;
       }
 
-      .wrapper {
-        padding: 20px;
-        width: 100%;
-        height: 100%;
-        box-sizing: border-box;
-      }
-
       .send-btn:hover {
         background: var(--primary-dark);
       }
@@ -248,55 +240,53 @@
         width: fit-content;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
       }
     </style>
   </head>
   <body>
-    <div class="wrapper">
-      <div class="widget">
-        <div class="header">
-          <div class="header-title">Live Support</div>
-          <div class="header-actions">
-            <button id="mychat-fullscreen-btn" title="Toggle fullscreen">
-              <svg
-                id="fullscreen-icon"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M9 3H3V9"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-                <path
-                  d="M15 3H21V9"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-                <path
-                  d="M21 15V21H15"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-                <path
-                  d="M3 15V21H9"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-              </svg>
-            </button>
-            <button class="close-btn" onclick="closeWidget()" title="close">
-              ×
-            </button>
-          </div>
+    <div class="widget">
+      <div class="header">
+        <div class="header-title">Live Support</div>
+        <div class="header-actions">
+          <button id="mychat-fullscreen-btn" title="Toggle fullscreen">
+            <svg
+              id="fullscreen-icon"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9 3H3V9"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M15 3H21V9"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M21 15V21H15"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M3 15V21H9"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+          <button class="close-btn" onclick="closeWidget()" title="close">
+            ×
+          </button>
         </div>
       </div>
 
