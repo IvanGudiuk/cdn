@@ -70,8 +70,8 @@
 `;
 
     var DESKTOP_STYLE = {
-      width: "360px",
-      height: "520px",
+      width: "366px",
+      height: "526px",
       right: "20px",
       bottom: "90px",
       borderRadius: "16px",
