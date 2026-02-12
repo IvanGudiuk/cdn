@@ -23,10 +23,10 @@
       html,
       body {
         margin: 0;
-        padding: 1px;
+        /* padding: 1px; */
         width: 100%;
         height: 100%;
-        border-radius: 16px;
+        /* border-radius: 16px; */
         font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
         background: transparent;
       }
@@ -49,9 +49,10 @@
           #e7eeff 65%,
           #dfe8ff 100%
         );
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06),
-          0 12px 30px rgba(0, 0, 0, 0.08);
+        /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06),
+          0 12px 30px rgba(0, 0, 0, 0.08); */
         border-radius: 16px;
+        border: 1px solid rgba(gray, 0, 0, 0, 0.1);
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -87,7 +88,7 @@
         overflow-y: auto;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
       }
 
       .message {
@@ -365,34 +366,34 @@
               />
             </svg>
           </button>
-          <div class="chat-input-wrapper">
-            <button id="attachBtn" type="button" class="attach-btn">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                width="24"
-                height="24"
-                fill="none"
-                stroke="black"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path
-                  d="M21 8.5L10.5 19a5 5 0 11-7.07-7.07L14.6 1.76a3.5 3.5 0 114.95 4.95L8.38 17.88a2 2 0 11-2.83-2.83L16 4.6"
-                />
-              </svg>
-            </button>
+        </div>
+        <div class="chat-input-wrapper">
+          <button id="attachBtn" type="button" class="attach-btn">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M16.5 6.5l-7.79 7.79a4 4 0 105.66 5.66l8.49-8.49a6 6 0 10-8.49-8.49L5.88 11.47a2 2 0 102.83 2.83l7.07-7.07"
+              />
+            </svg>
+          </button>
 
-            <input
-              id="fileInput"
-              type="file"
-              style="display: none"
-              accept="image/*,video/*,.pdf,.doc,.docx,.txt"
-            />
+          <input
+            id="fileInput"
+            type="file"
+            style="display: none"
+            accept="image/*,video/*,.pdf,.doc,.docx,.txt"
+          />
 
-            <div id="filePreview" class="file-preview"></div>
-          </div>
+          <div id="filePreview" class="file-preview"></div>
         </div>
         <div class="powered">
           powered by
@@ -402,7 +403,12 @@
         </div>
       </div>
     </div>
-
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script>
+      const socket = io("https://api.flex-chat.com", {
+        transports: ["websocket"],
+      });
+    </script>
     <script>
       function closeWidget() {
         parent.postMessage({ type: "MYCHAT_CLOSE" }, "*");
@@ -440,12 +446,6 @@
         }
 
         messages.scrollTop = messages.scrollHeight;
-      });
-    </script>
-    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-    <script>
-      const socket = io("https://api.flex-chat.com", {
-        transports: ["websocket"],
       });
     </script>
     <script>
@@ -551,6 +551,12 @@
     </script>
     <script>
       const fileInput = document.getElementById("fileInput");
+
+      const attachBtn = document.getElementById("attachBtn");
+
+      attachBtn.addEventListener("click", () => {
+        fileInput.click();
+      });
 
       fileInput.addEventListener("change", async () => {
         const file = fileInput.files[0];
