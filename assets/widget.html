@@ -23,13 +23,11 @@
       html,
       body {
         margin: 0;
-        padding: 0;
+        padding: 2px;
         width: 100%;
         height: 100%;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
         background: transparent;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06),
-          0 12px 30px rgba(0, 0, 0, 0.08);
       }
 
       a {
@@ -50,8 +48,9 @@
           #e7eeff 65%,
           #dfe8ff 100%
         );
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06),
+          0 12px 30px rgba(0, 0, 0, 0.08);
         border-radius: 16px;
-        border: 1px solid rgba(0, 0, 0, 0.1);
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -59,12 +58,6 @@
 
       /* HEADER */
       .header {
-        /* background: linear-gradient(
-          135deg,
-          #5f6bff 0%,
-          #6a7cff 40%,
-          #4f5dff 100%
-        ); */
         background: linear-gradient(90deg, #6a64f6, #a96ddf, #c77fcd, #a789c9);
         color: white;
         padding: 14px 16px;
@@ -184,10 +177,6 @@
         font-size: 14px;
         color: var(--text-dark);
       }
-
-      /* button:hover {
-        background: var(--primary-dark);
-      } */
 
       #mychat-fullscreen-btn {
         display: flex;
@@ -376,6 +365,104 @@
         }
 
         messages.scrollTop = messages.scrollHeight;
+      });
+    </script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script>
+      const socket = io("https://api.flex-chat.com", {
+        transports: ["websocket"],
+      });
+    </script>
+    <script>
+      const STORAGE_KEY = "mychat_session";
+
+      // ---------- SESSION INIT ----------
+      let session = JSON.parse(localStorage.getItem(STORAGE_KEY));
+
+      if (!session) {
+        session = {
+          sessionId: crypto.randomUUID(),
+          messages: [],
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+      }
+
+      // ---------- JOIN SOCKET ROOM ----------
+      socket.on("connect", () => {
+        socket.emit("join", { sessionId: session.sessionId });
+      });
+
+      const messagesContainer = document.querySelector(".messages");
+      const msgInput = document.getElementById("chat-input");
+      const sendBtn = document.querySelector(".send-btn");
+
+      // ---------- TIME FORMAT ----------
+      function formatTime(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      }
+
+      // ---------- RENDER MESSAGE ----------
+      function renderMessage(msg) {
+        const div = document.createElement("div");
+        div.className = `message ${msg.sender}`;
+
+        div.innerHTML = `
+      <div>${msg.text}</div>
+      <div style="font-size:11px; opacity:0.6; margin-top:4px;">
+        ${formatTime(msg.createdAt)}
+      </div>
+    `;
+
+        messagesContainer.appendChild(div);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+
+      // ---------- SAVE MESSAGE ----------
+      function saveMessage(msg) {
+        session.messages.push(msg);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+      }
+
+      // ---------- LOAD OLD MESSAGES ----------
+      session.messages.forEach(renderMessage);
+
+      function sendMessage() {
+        const text = msgInput.value.trim();
+        if (!text) return;
+
+        const message = {
+          id: crypto.randomUUID(),
+          text,
+          sender: "user",
+          createdAt: new Date().toISOString(),
+          sessionId: session.sessionId,
+        };
+
+        renderMessage(message);
+        saveMessage(message);
+
+        socket.emit("message", message);
+
+        msgInput.value = "";
+        msgInput.style.height = "auto";
+      }
+
+      sendBtn.addEventListener("click", sendMessage);
+
+      msgInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+
+      socket.on("message", (msg) => {
+        renderMessage(msg);
+        saveMessage(msg);
       });
     </script>
   </body>
