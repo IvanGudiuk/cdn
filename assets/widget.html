@@ -23,9 +23,10 @@
       html,
       body {
         margin: 0;
-        padding: 2px;
+        padding: 1px;
         width: 100%;
         height: 100%;
+        border-radius: 16px;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
         background: transparent;
       }
@@ -461,8 +462,52 @@
       });
 
       socket.on("message", (msg) => {
+        hideTyping();
         renderMessage(msg);
         saveMessage(msg);
+      });
+    </script>
+    <script>
+      let typingDiv = null;
+      let typingInterval = null;
+
+      // Функция показа "typing..."
+      function showTyping() {
+        if (!typingDiv) {
+          typingDiv = document.createElement("div");
+          typingDiv.className = "message agent";
+          typingDiv.textContent = "typing.";
+          messagesContainer.appendChild(typingDiv);
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        let dotCount = 1;
+        typingInterval = setInterval(() => {
+          dotCount = (dotCount % 3) + 1;
+          typingDiv.textContent = "typing" + ".".repeat(dotCount);
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }, 500); // меняем точки каждые 0.5 сек
+      }
+
+      // Функция скрытия "typing..."
+      function hideTyping() {
+        if (typingInterval) {
+          clearInterval(typingInterval);
+          typingInterval = null;
+        }
+        if (typingDiv) {
+          messagesContainer.removeChild(typingDiv);
+          typingDiv = null;
+        }
+      }
+
+      // Обработка события от сервера
+      socket.on("typing", (data) => {
+        if (data.isTyping) {
+          showTyping();
+        } else {
+          hideTyping();
+        }
       });
     </script>
   </body>
