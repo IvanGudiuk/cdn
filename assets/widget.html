@@ -229,6 +229,13 @@
         cursor: pointer;
       }
 
+      .wrapper {
+        padding: 20px;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+      }
+
       .send-btn:hover {
         background: var(--primary-dark);
       }
@@ -246,48 +253,50 @@
     </style>
   </head>
   <body>
-    <div class="widget">
-      <div class="header">
-        <div class="header-title">Live Support</div>
-        <div class="header-actions">
-          <button id="mychat-fullscreen-btn" title="Toggle fullscreen">
-            <svg
-              id="fullscreen-icon"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M9 3H3V9"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-              <path
-                d="M15 3H21V9"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-              <path
-                d="M21 15V21H15"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-              <path
-                d="M3 15V21H9"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-            </svg>
-          </button>
-          <button class="close-btn" onclick="closeWidget()" title="close">
-            ×
-          </button>
+    <div class="wrapper">
+      <div class="widget">
+        <div class="header">
+          <div class="header-title">Live Support</div>
+          <div class="header-actions">
+            <button id="mychat-fullscreen-btn" title="Toggle fullscreen">
+              <svg
+                id="fullscreen-icon"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9 3H3V9"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M15 3H21V9"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M21 15V21H15"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+                <path
+                  d="M3 15V21H9"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </button>
+            <button class="close-btn" onclick="closeWidget()" title="close">
+              ×
+            </button>
+          </div>
         </div>
       </div>
 
