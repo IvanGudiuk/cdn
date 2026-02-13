@@ -48,9 +48,8 @@
           #e7eeff 65%,
           #dfe8ff 100%
         );
-        box-shadow: none;
-        filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.25))
-          drop-shadow(0 0 20px rgba(0, 0, 0, 0.12));
+        box-shadow: 0 20px 80px rgba(0, 0, 0, 0.15),
+          0 8px 30px rgba(0, 0, 0, 0.08);
         border-radius: 16px;
         display: flex;
         flex-direction: column;
@@ -396,7 +395,7 @@
               title="send message"
             >
               <svg
-                viewBox="0 0 24 24"
+                viewBox="0 0 48 48"
                 width="24"
                 height="24"
                 fill="none"
@@ -405,7 +404,7 @@
                 <path
                   d="M22 2L11 13"
                   stroke="currentColor"
-                  stroke-width="2"
+                  stroke-width="1"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 />
@@ -615,13 +614,15 @@
         if (!text) return;
 
         const message = {
-          content: { type: "text", text },
+          content: { type: "text", text, file: null },
           sender: "visitor",
           siteId,
           status: "sent",
           createdAt: new Date().toISOString(),
           sessionId: session.sessionId,
         };
+
+        console.log("message", message);
 
         renderMessage(message);
         saveMessage(message);
@@ -641,11 +642,11 @@
         }
       });
 
-      socket.on("message", (msg) => {
-        hideTyping();
-        renderMessage(msg);
-        saveMessage(msg);
-      });
+      // socket.on("message", (msg) => {
+      //   hideTyping();
+      //   renderMessage(msg);
+      //   saveMessage(msg);
+      // });
     </script>
     <script>
       const fileInput = document.getElementById("fileInput");
