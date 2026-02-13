@@ -93,8 +93,8 @@
       }
     }
 
-    iframe.src = "https://curly-scene-692e.pr-zt.workers.dev/widget.html";
-    iframe.allowFullscreen = true;
+    iframe.src = `https://curly-scene-692e.pr-zt.workers.dev/widget.html?siteId=${siteId}`;
+    // iframe.allowFullscreen = true;
     iframe.setAttribute("allow", "fullscreen");
     iframe.style.position = "fixed";
     iframe.style.bottom = "90px";

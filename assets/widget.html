@@ -49,8 +49,8 @@
           #dfe8ff 100%
         );
         box-shadow: none;
-        filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.25))
-          drop-shadow(0 0 12px rgba(0, 0, 0, 0.15));
+        filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.25))
+          drop-shadow(0 0 20px rgba(0, 0, 0, 0.12));
         border-radius: 16px;
         display: flex;
         flex-direction: column;
@@ -138,7 +138,7 @@
         flex: 1;
         resize: none;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-        overflow-y: hidden;
+        overflow-y: scroll;
         padding: 10px 12px;
         border-radius: 10px;
         border-bottom: 1px solid #ddd;
@@ -205,7 +205,7 @@
 
       .attach-btn {
         background: none;
-        padding: 5px;
+        /* padding: 5px; */
         border: none;
         cursor: pointer;
         display: flex;
@@ -305,7 +305,7 @@
       <div class="header">
         <div class="header-title">Live Support</div>
         <div class="header-actions">
-          <button id="mychat-fullscreen-btn" title="Toggle fullscreen">
+          <button id="mychat-fullscreen-btn" title="toggle fullscreen">
             <svg
               id="fullscreen-icon"
               width="18"
@@ -422,7 +422,10 @@
         </div>
         <div class="powered">
           powered by
-          <a href="https://flex-chat.com" target="_blank"
+          <a
+            href="https://flex-chat.com"
+            target="_blank"
+            title="https://flex-chat.com"
             ><span class="flex">Flex</span><span class="chat">Chat</span></a
           >
         </div>
@@ -476,7 +479,8 @@
     <script>
       const STORAGE_KEY = "mychat_session";
 
-      const siteId = window.FLEX_CHAT_ID || null;
+      const params = new URLSearchParams(window.location.search);
+      const siteId = params.get("siteId");
 
       if (!siteId) {
         console.error("FLEX_CHAT_ID is missing");
@@ -529,27 +533,59 @@
 
       // ---------- RENDER MESSAGE ----------
       function renderMessage(message) {
-        const wrapper = document.createElement("div");
-        wrapper.className = "chat-message";
-
-        const bubble = document.createElement("div");
-        bubble.className = "chat-bubble";
-
-        // текст сообщения
-        if (message.content.type === "text") {
-          bubble.textContent = message.content.text;
+        if (!message || !message.content) {
+          console.warn("Invalid message:", message);
+          return null;
         }
 
-        wrapper.appendChild(bubble);
+        const { type, text, file } = message.content;
 
-        if (message.sender === "ai" || message.sender === "operator") {
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("chat-message");
+
+        const bubble = document.createElement("div");
+        bubble.classList.add("message");
+
+        // === КЛАСС ОТПРАВИТЕЛЯ ===
+        if (message.sender === "visitor") {
+          bubble.classList.add("visitor");
+        } else if (message.sender === "operator" || message.sender === "ai") {
+          bubble.classList.add("agent");
+        }
+
+        // === ПОДПИСЬ (только для agent) ===
+        if (message.sender === "operator" || message.sender === "ai") {
           const senderEl = document.createElement("div");
           senderEl.className = "chat-sender";
-
-          senderEl.textContent = message.sender === "ai" ? "AI" : "Оператор";
+          senderEl.textContent = message.sender === "ai" ? "AI" : "Operator";
 
           wrapper.appendChild(senderEl);
         }
+
+        // === КОНТЕНТ ===
+        if (type === "text") {
+          bubble.textContent = text || "";
+        }
+
+        if (type === "image" && file?.url) {
+          const img = document.createElement("img");
+          img.src = file.url;
+          img.className = "chat-image";
+          img.style.maxWidth = "200px";
+          img.style.borderRadius = "8px";
+          bubble.appendChild(img);
+        }
+
+        if (type === "file" && file?.url) {
+          const link = document.createElement("a");
+          link.href = file.url;
+          link.target = "_blank";
+          link.textContent = file.name || "Download file";
+          link.style.color = "inherit";
+          bubble.appendChild(link);
+        }
+
+        wrapper.appendChild(bubble);
 
         return wrapper;
       }
@@ -580,7 +616,7 @@
         renderMessage(message);
         saveMessage(message);
 
-        socket.emit("message", message);
+        // socket.emit("message", message);
 
         msgInput.value = "";
         msgInput.style.height = "auto";
