@@ -153,7 +153,7 @@
         border: none;
         color: white;
         border-radius: 10px;
-        padding: 0 14px;
+        /* padding: 0 14px; */
         font-weight: 600;
         cursor: pointer;
       }
@@ -367,10 +367,10 @@
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
-                viewBox="0 0 48 48"
+                viewBox="0 0 18 18"
                 id="Attach--Streamline-Ionic-Filled"
-                height="20"
-                width="20"
+                height="18"
+                width="18"
               >
                 <path
                   fill="#000000"
@@ -549,15 +549,26 @@
         // === КЛАСС ОТПРАВИТЕЛЯ ===
         if (message.sender === "visitor") {
           bubble.classList.add("visitor");
-        } else if (message.sender === "operator" || message.sender === "ai") {
+        } else if (
+          message.sender === "operator" ||
+          message.sender === "ai" ||
+          message.sender === "owner"
+        ) {
           bubble.classList.add("agent");
         }
 
-        // === ПОДПИСЬ (только для agent) ===
-        if (message.sender === "operator" || message.sender === "ai") {
+        // === ПОДПИСЬ (для всех кроме visitor) ===
+        if (message.sender !== "visitor") {
           const senderEl = document.createElement("div");
           senderEl.className = "chat-sender";
-          senderEl.textContent = message.sender === "ai" ? "AI" : "Operator";
+
+          if (message.sender === "ai") {
+            senderEl.textContent = "AI";
+          } else if (message.sender === "owner") {
+            senderEl.textContent = "Owner";
+          } else {
+            senderEl.textContent = "Operator";
+          }
 
           wrapper.appendChild(senderEl);
         }
@@ -604,11 +615,10 @@
         if (!text) return;
 
         const message = {
-          // id: crypto.randomUUID(),
-          text,
-          type: "message",
+          content: { type: "text", text },
           sender: "visitor",
           siteId,
+          status: "sent",
           createdAt: new Date().toISOString(),
           sessionId: session.sessionId,
         };
