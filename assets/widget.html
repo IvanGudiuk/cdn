@@ -366,10 +366,10 @@
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
-                viewBox="0 0 18 18"
+                viewBox="0 0 48 48"
                 id="Attach--Streamline-Ionic-Filled"
-                height="18"
-                width="18"
+                height="20"
+                width="20"
               >
                 <path
                   fill="#000000"
@@ -404,7 +404,7 @@
                 <path
                   d="M22 2L11 13"
                   stroke="currentColor"
-                  stroke-width="1"
+                  stroke-width="2"
                   stroke-linecap="round"
                   stroke-linejoin="round"
                 />
@@ -607,7 +607,12 @@
       }
 
       // ---------- LOAD OLD MESSAGES ----------
-      session.messages.forEach(renderMessage);
+      session.messages.forEach((msg) => {
+        const el = renderMessage(msg);
+        if (el) {
+          messagesContainer.appendChild(el);
+        }
+      });
 
       function sendMessage() {
         const text = msgInput.value.trim();
@@ -622,9 +627,12 @@
           sessionId: session.sessionId,
         };
 
-        console.log("message", message);
+        const el = renderMessage(message);
+        if (el) {
+          messagesContainer.appendChild(el);
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
 
-        renderMessage(message);
         saveMessage(message);
 
         // socket.emit("message", message);
