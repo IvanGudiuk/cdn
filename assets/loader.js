@@ -70,7 +70,7 @@
 `;
 
     var DESKTOP_STYLE = {
-      width: "366px",
+      width: "400px",
       height: "526px",
       right: "20px",
       bottom: "90px",
