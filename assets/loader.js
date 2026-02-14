@@ -175,6 +175,16 @@
       }
     });
 
+    document.addEventListener(
+      "touchmove",
+      (e) => {
+        if (!e.target.closest(".messages")) {
+          e.preventDefault();
+        }
+      },
+      { passive: false }
+    );
+
     function mount() {
       document.body.appendChild(iframe);
       document.body.appendChild(button);
