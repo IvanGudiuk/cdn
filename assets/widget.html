@@ -374,11 +374,7 @@
         </div>
       </div>
 
-      <div class="messages">
-        {#
-        <div class="message agent">👋 Hi! How can we help you?</div>
-        #}
-      </div>
+      <div class="messages"></div>
 
       <div class="footer">
         <div class="input-wrap">
@@ -481,23 +477,9 @@
         de: "👋 Hallo! Wie können wir helfen?",
       };
 
-      function detectLanguage() {
-        const available = Object.keys(translations);
-        const langs = navigator.languages || [navigator.language];
-
-        for (let l of langs) {
-          const short = l.split("-")[0];
-          if (available.includes(short)) {
-            return short;
-          }
-        }
-
-        return "en";
-      }
-
       document.addEventListener("DOMContentLoaded", () => {
-        const lang = detectLanguage();
-        const welcomeText = translations[lang];
+        const lang = (navigator.language || "en").split("-")[0];
+        const welcomeText = translations[lang] || translations.en;
 
         const messages = document.getElementById("messages");
 
