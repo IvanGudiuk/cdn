@@ -375,7 +375,9 @@
       </div>
 
       <div class="messages">
+        {#
         <div class="message agent">👋 Hi! How can we help you?</div>
+        #}
       </div>
 
       <div class="footer">
@@ -470,6 +472,43 @@
         parent.postMessage({ type: "MYCHAT_CLOSE" }, "*");
       }
     </script>
+    <script>
+      const translations = {
+        en: "👋 Hi! How can we help you?",
+        ru: "👋 Привет! Чем можем помочь?",
+        uk: "👋 Привіт! Чим можемо допомогти?",
+        tr: "👋 Merhaba! Size nasıl yardımcı olabiliriz?",
+        de: "👋 Hallo! Wie können wir helfen?",
+      };
+
+      function detectLanguage() {
+        const available = Object.keys(translations);
+        const langs = navigator.languages || [navigator.language];
+
+        for (let l of langs) {
+          const short = l.split("-")[0];
+          if (available.includes(short)) {
+            return short;
+          }
+        }
+
+        return "en";
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const lang = detectLanguage();
+        const welcomeText = translations[lang];
+
+        const messages = document.getElementById("messages");
+
+        const msg = document.createElement("div");
+        msg.className = "message agent";
+        msg.textContent = welcomeText;
+
+        messages.appendChild(msg);
+      });
+    </script>
+
     <script>
       const fsBtn = document.getElementById("mychat-fullscreen-btn");
       const widget = document.querySelector(".widget");

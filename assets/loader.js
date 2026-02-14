@@ -179,9 +179,9 @@
     document.addEventListener(
       "touchmove",
       (e) => {
-        if (!e.target.closest(".messages")) {
-          e.preventDefault();
-        }
+        if (!isOpen) return;
+
+        e.preventDefault();
       },
       { passive: false }
     );
