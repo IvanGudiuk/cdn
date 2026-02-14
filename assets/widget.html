@@ -472,16 +472,16 @@
       const translations = {
         en: "👋 Hi! How can we help you?",
         ru: "👋 Привет! Чем можем помочь?",
-        uk: "👋 Привіт! Чим можемо допомогти?",
-        tr: "👋 Merhaba! Size nasıl yardımcı olabiliriz?",
         de: "👋 Hallo! Wie können wir helfen?",
+        es: "👋 ¡Hola! ¿En qué podemos ayudarte?",
+        fr: "👋 Bonjour ! Comment pouvons-nous vous aider ?",
       };
 
       document.addEventListener("DOMContentLoaded", () => {
         const lang = (navigator.language || "en").split("-")[0];
         const welcomeText = translations[lang] || translations.en;
 
-        const messages = document.getElementById("messages");
+        const messages = document.querySelector(".messages");
 
         const msg = document.createElement("div");
         msg.className = "message agent";
