@@ -118,10 +118,11 @@
 
     // mobile fullscreen
     function applyMobile() {
+      iframe.style.position = "fixed";
+      iframe.style.top = "0";
+      iframe.style.left = "0";
       iframe.style.width = "100vw";
-      iframe.style.height = "100vh";
-      iframe.style.right = "0";
-      iframe.style.bottom = "0";
+      iframe.style.height = "100dvh";
       iframe.style.borderRadius = "0";
     }
 
