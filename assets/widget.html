@@ -479,6 +479,7 @@
 
       document.addEventListener("DOMContentLoaded", () => {
         const lang = (navigator.language || "en").split("-")[0];
+        console.log("lang", lang);
         const welcomeText = translations[lang] || translations.en;
 
         const messages = document.querySelector(".messages");
