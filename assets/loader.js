@@ -4,6 +4,8 @@
 
   const siteId = window?.FLEX_CHAT_ID || null;
 
+  let aiEnabled = false;
+
   if (!siteId) {
     console.log("No site ID, widget will not render");
     return;
@@ -24,7 +26,9 @@
   //       console.log("Widget blocked for this user");
   //       return;
   //     }
-
+  //     if (data.aiEnabled) {
+  //       aiEnabled = data.aiEnabled;
+  //     }
   //     initWidget();
   //   })
   //   .catch(() => console.log("Access check failed"));
@@ -93,14 +97,14 @@
       }
     }
 
-    iframe.src = `https://curly-scene-692e.pr-zt.workers.dev/widget.html?siteId=${siteId}`;
+    iframe.src = `https://curly-scene-692e.pr-zt.workers.dev/widget.html?siteId=${siteId}&aiEnabled=${aiEnabled}`;
     // iframe.allowFullscreen = true;
     iframe.setAttribute("allow", "fullscreen");
     iframe.style.position = "fixed";
     iframe.style.bottom = "90px";
     iframe.style.right = "20px";
     iframe.style.width = "360px";
-    iframe.style.height = "520px";
+    iframe.style.height = "560px";
     iframe.style.border = "none";
     iframe.style.zIndex = "999999";
     iframe.style.borderRadius = "16px";

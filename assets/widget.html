@@ -526,9 +526,17 @@
 
       const params = new URLSearchParams(window.location.search);
       const siteId = params.get("siteId");
+      const aiEnabled = params.get("aiEnabled") === "true";
 
       if (!siteId) {
         console.error("FLEX_CHAT_ID is missing");
+      }
+
+      if (aiEnabled) {
+        const attachBtn = document.getElementById("attachBtn");
+        if (attachBtn) {
+          attachBtn.style.display = "none";
+        }
       }
 
       // ---------- SESSION INIT ----------
