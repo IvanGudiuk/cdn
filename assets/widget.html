@@ -469,7 +469,37 @@
       </div>
     </div>
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4/dist/index.min.js"></script>
+    <script type="module">
+      import EmojiButton from "https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4/+esm";
+
+      const emojiBtn = document.getElementById("emojiBtn");
+      const textarea = document.getElementById("chat-input");
+
+      const picker = new EmojiButton({
+        position: "top-start",
+        autoHide: false,
+      });
+
+      emojiBtn.addEventListener("click", () => {
+        picker.togglePicker(emojiBtn);
+      });
+
+      picker.on("emoji", (emoji) => {
+        insertAtCursor(textarea, emoji);
+      });
+
+      function insertAtCursor(el, text) {
+        const start = el.selectionStart;
+        const end = el.selectionEnd;
+
+        el.value =
+          el.value.substring(0, start) + text + el.value.substring(end);
+
+        el.selectionStart = el.selectionEnd = start + text.length;
+        el.focus();
+      }
+    </script>
+
     <script>
       const socket = io("https://api.flex-chat.com", {
         transports: ["websocket"],
@@ -491,7 +521,6 @@
 
       document.addEventListener("DOMContentLoaded", () => {
         const lang = (navigator.language || "en").split("-")[0];
-        console.log("lang", lang);
         const welcomeText = translations[lang] || translations.en;
 
         const messages = document.querySelector(".messages");
@@ -518,7 +547,7 @@
       }
     </script>
     <script>
-      const textarea = document.getElementById("chat-input");
+      // const textarea = document.getElementById("chat-input");
       const messages = document.querySelector(".messages");
 
       textarea.addEventListener("input", () => {
@@ -826,35 +855,6 @@
         }
       });
     </script>
-    <script>
-      const emojiBtn = document.getElementById("emojiBtn");
-      // const textarea = document.getElementById("chat-input");
-
-      const picker = new EmojiButton({
-        position: "top-start",
-        autoHide: false,
-      });
-
-      emojiBtn.addEventListener("click", () => {
-        picker.togglePicker(emojiBtn);
-      });
-
-      picker.on("emoji", (emoji) => {
-        insertAtCursor(textarea, emoji);
-      });
-
-      function insertAtCursor(el, text) {
-        const start = el.selectionStart;
-        const end = el.selectionEnd;
-
-        el.value =
-          el.value.substring(0, start) + text + el.value.substring(end);
-
-        el.selectionStart = el.selectionEnd = start + text.length;
-        el.focus();
-      }
-    </script>
-
     <script>
       let typingDiv = null;
       let typingInterval = null;
