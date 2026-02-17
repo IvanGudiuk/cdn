@@ -470,10 +470,10 @@
     </div>
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <script type="module">
-      import EmojiButton from "https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4/+esm";
+      import { EmojiButton } from "https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4/+esm";
 
       const emojiBtn = document.getElementById("emojiBtn");
-      const textarea = document.getElementById("chat-input");
+      const textar = document.getElementById("chat-input");
 
       const picker = new EmojiButton({
         position: "top-start",
@@ -485,7 +485,7 @@
       });
 
       picker.on("emoji", (emoji) => {
-        insertAtCursor(textarea, emoji);
+        insertAtCursor(textar, emoji);
       });
 
       function insertAtCursor(el, text) {
@@ -546,8 +546,8 @@
         });
       }
     </script>
-    <script>
-      // const textarea = document.getElementById("chat-input");
+    <script type="module">
+      const textarea = document.getElementById("chat-input");
       const messages = document.querySelector(".messages");
 
       textarea.addEventListener("input", () => {
