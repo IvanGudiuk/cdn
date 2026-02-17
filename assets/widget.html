@@ -409,6 +409,14 @@
               style="display: none"
               accept="image/*,video/*,.pdf,.doc,.docx,.txt"
             />
+            <button
+              id="emojiBtn"
+              type="button"
+              class="attach-btn"
+              title="emoji"
+            >
+              😊
+            </button>
 
             <div id="filePreview" class="file-preview"></div>
             <button
@@ -486,7 +494,7 @@
         messages.appendChild(msg);
       });
     </script>
-
+    <script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4/dist/index.min.js"></script>
     <script>
       const fsBtn = document.getElementById("mychat-fullscreen-btn");
       const widget = document.querySelector(".widget");
@@ -534,9 +542,10 @@
 
       if (aiEnabled) {
         const attachBtn = document.getElementById("attachBtn");
-        if (attachBtn) {
-          attachBtn.style.display = "none";
-        }
+        const fileInput = document.getElementById("fileInput");
+
+        if (attachBtn) attachBtn.remove();
+        if (fileInput) fileInput.remove();
       }
 
       // ---------- SESSION INIT ----------
@@ -809,6 +818,35 @@
         }
       });
     </script>
+    <script>
+      const emojiBtn = document.getElementById("emojiBtn");
+      // const textarea = document.getElementById("chat-input");
+
+      const picker = new EmojiButton({
+        position: "top-start",
+        autoHide: false,
+      });
+
+      emojiBtn.addEventListener("click", () => {
+        picker.togglePicker(emojiBtn);
+      });
+
+      picker.on("emoji", (emoji) => {
+        insertAtCursor(textarea, emoji);
+      });
+
+      function insertAtCursor(el, text) {
+        const start = el.selectionStart;
+        const end = el.selectionEnd;
+
+        el.value =
+          el.value.substring(0, start) + text + el.value.substring(end);
+
+        el.selectionStart = el.selectionEnd = start + text.length;
+        el.focus();
+      }
+    </script>
+
     <script>
       let typingDiv = null;
       let typingInterval = null;
