@@ -254,6 +254,11 @@
         gap: 10px;
       }
 
+      .emoji-picker {
+        position: absolute !important;
+        z-index: 9999 !important;
+      }
+
       .file-preview {
         margin-top: 8px;
       }
@@ -477,15 +482,16 @@
 
       const picker = new EmojiButton({
         position: "top-start",
-        autoHide: false,
+        autoHide: true,
+        rootElement: document.body,
       });
 
       emojiBtn.addEventListener("click", () => {
         picker.togglePicker(emojiBtn);
       });
 
-      picker.on("emoji", (emoji) => {
-        insertAtCursor(textar, emoji);
+      picker.on("emoji", (selection) => {
+        insertAtCursor(textar, selection.emoji);
       });
 
       function insertAtCursor(el, text) {
