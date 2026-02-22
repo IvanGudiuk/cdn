@@ -518,28 +518,6 @@
       }
     </script>
     <script>
-      const translations = {
-        en: "👋 Hi! How can we help you?",
-        ru: "👋 Привет! Чем можем помочь?",
-        de: "👋 Hallo! Wie können wir helfen?",
-        es: "👋 ¡Hola! ¿En qué podemos ayudarte?",
-        fr: "👋 Bonjour ! Comment pouvons-nous vous aider ?",
-      };
-
-      document.addEventListener("DOMContentLoaded", () => {
-        const lang = (navigator.language || "en").split("-")[0];
-        const welcomeText = translations[lang] || translations.en;
-
-        const messages = document.querySelector(".messages");
-
-        const msg = document.createElement("div");
-        msg.className = "message agent";
-        msg.textContent = welcomeText;
-
-        messages.appendChild(msg);
-      });
-    </script>
-    <script>
       const fsBtn = document.getElementById("mychat-fullscreen-btn");
       const widget = document.querySelector(".widget");
 
@@ -600,6 +578,29 @@
           sessionId: crypto.randomUUID(),
           messages: [],
         };
+
+        if (session.messages.length === 0) {
+          const translations = {
+            en: "👋 Hi! How can we help you?",
+            ru: "👋 Привет! Чем можем помочь?",
+            de: "👋 Hallo! Wie können wir helfen?",
+            es: "👋 ¡Hola! ¿En qué podemos ayudarte?",
+            fr: "👋 Bonjour ! Comment pouvons-nous vous aider ?",
+          };
+
+          const lang = (navigator.language || "en").split("-")[0];
+          const welcomeText = translations[lang] || translations.en;
+
+          session.messages.push({
+            sender: "ai",
+            createdAt: new Date().toISOString(),
+            content: {
+              type: "text",
+              text: welcomeText,
+            },
+          });
+        }
+
         localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
       }
 
