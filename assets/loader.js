@@ -5,13 +5,14 @@
   const siteId = window?.FLEX_CHAT_ID || null;
 
   let aiEnabled = false;
+  let scrollPosition = 0;
 
   if (!siteId) {
     console.log("No site ID, widget will not render");
     return;
   }
 
-  // fetch("https://api.flex-chat.com/api/widget-access", {
+  // fetch("https://chat-back--ivangudiuk.replit.app/api/widget-access", {
   //   method: "POST",
   //   headers: {
   //     "Content-Type": "application/json",
@@ -166,6 +167,13 @@
     button.onclick = function () {
       isOpen = !isOpen;
       iframe.style.display = isOpen ? "block" : "none";
+
+      if (isOpen && isMobile()) {
+        lockScroll();
+      } else {
+        unlockScroll();
+      }
+
       updateButtonIcon();
       updateLayout();
       updateButtonVisibility();
@@ -175,20 +183,43 @@
       if (e.data && e.data.type === "MYCHAT_CLOSE") {
         isOpen = false;
         iframe.style.display = "none";
+
+        unlockScroll();
+
         updateButtonIcon();
         updateButtonVisibility();
       }
     });
 
-    document.addEventListener(
-      "touchmove",
-      (e) => {
-        if (!isOpen) return;
+    function lockScroll() {
+      scrollPosition = window.scrollY;
 
-        e.preventDefault();
-      },
-      { passive: false }
-    );
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollPosition}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+      document.body.style.width = "100%";
+    }
+
+    function unlockScroll() {
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.width = "";
+
+      window.scrollTo(0, scrollPosition);
+    }
+
+    // document.addEventListener(
+    //   "touchmove",
+    //   (e) => {
+    //     if (!isOpen) return;
+
+    //     e.preventDefault();
+    //   },
+    //   { passive: false }
+    // );
 
     function mount() {
       document.body.appendChild(iframe);

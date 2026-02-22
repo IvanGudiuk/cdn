@@ -608,6 +608,18 @@
         socket.emit("join", { sessionId: session.sessionId, siteId });
       });
 
+      socket.on("message", (msg) => {
+        hideTyping();
+
+        const el = renderMessage(msg);
+        if (el) {
+          messagesContainer.appendChild(el);
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        saveMessage(msg);
+      });
+
       const messagesContainer = document.querySelector(".messages");
       const msgInput = document.getElementById("chat-input");
       const sendBtn = document.querySelector(".send-btn");
@@ -734,6 +746,20 @@
         const text = msgInput.value.trim();
         if (!text) return;
 
+        if (!session) {
+          session = {
+            sessionId: crypto.randomUUID(),
+            messages: [],
+          };
+
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+
+          socket.emit("join", { sessionId: session.sessionId, siteId });
+
+          msgInput.disabled = false;
+          sendBtn.disabled = false;
+        }
+
         const message = {
           content: { type: "text", text, file: null },
           sender: "visitor",
@@ -751,7 +777,7 @@
 
         saveMessage(message);
 
-        // socket.emit("message", message);
+        socket.emit("message", message);
 
         msgInput.value = "";
         msgInput.style.height = "auto";
@@ -897,12 +923,38 @@
       }
 
       // Обработка события от сервера
-      socket.on("typing", (data) => {
-        if (data.isTyping) {
-          showTyping();
-        } else {
-          hideTyping();
+      socket.on("operator_typing", () => {
+        showTyping();
+      });
+
+      socket.on("operator_typing_stopped", () => {
+        hideTyping();
+      });
+
+      socket.on("conversation_resolved", () => {
+        hideTyping();
+
+        const systemMsg = {
+          sender: "system",
+          createdAt: new Date().toISOString(),
+          content: {
+            type: "text",
+            text: "Conversation has been resolved.",
+          },
+        };
+
+        const el = renderMessage(systemMsg);
+        if (el) {
+          messagesContainer.appendChild(el);
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
+
+        msgInput.disabled = true;
+        sendBtn.disabled = true;
+
+        localStorage.removeItem(STORAGE_KEY);
+
+        session = null;
       });
     </script>
   </body>
