@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -28,7 +28,11 @@
         height: 100%;
         overflow: hidden;
         overscroll-behavior: none;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
         background: transparent;
       }
 
@@ -52,7 +56,8 @@
           #e7eeff 65%,
           #dfe8ff 100%
         );
-        box-shadow: 0 20px 80px rgba(0, 0, 0, 0.08),
+        box-shadow:
+          0 20px 80px rgba(0, 0, 0, 0.08),
           0 8px 30px rgba(0, 0, 0, 0.05);
         border-radius: 16px;
         border: 1px solid rgba(157, 155, 155, 0.1);
@@ -98,6 +103,12 @@
 
       .chat-message {
         display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .chat-message .message.visitor {
+        align-self: flex-end;
       }
 
       .message {
@@ -149,7 +160,11 @@
       textarea {
         flex: 1;
         resize: none;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
         overflow-y: hidden;
         padding: 12px;
         border-bottom: 1px solid #ddd;
@@ -201,9 +216,41 @@
       }
 
       .chat-sender {
-        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 6px;
+        margin-left: 2px;
+      }
+
+      .chat-sender-avatar {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        font-weight: 600;
+        color: #fff;
+        flex-shrink: 0;
+      }
+
+      .chat-sender-avatar.ai {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      }
+
+      .chat-sender-avatar.owner {
+        background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+      }
+
+      .chat-sender-avatar.operator {
+        background: linear-gradient(135deg, #64748b, #475569);
+      }
+
+      .chat-sender-name {
+        font-size: 11px;
         color: #888;
-        margin-top: 4px;
       }
 
       #mychat-fullscreen-btn {
@@ -676,22 +723,6 @@
           bubble.classList.add("agent");
         }
 
-        // === ПОДПИСЬ (для всех кроме visitor) ===
-        if (message.sender !== "visitor") {
-          const senderEl = document.createElement("div");
-          senderEl.className = "chat-sender";
-
-          if (message.sender === "ai") {
-            senderEl.textContent = "AI";
-          } else if (message.sender === "owner") {
-            senderEl.textContent = "Owner";
-          } else {
-            senderEl.textContent = "Operator";
-          }
-
-          wrapper.appendChild(senderEl);
-        }
-
         // === КОНТЕНТ ===
         if (type === "text") {
           bubble.textContent = text || "";
@@ -725,6 +756,41 @@
         }
 
         wrapper.appendChild(bubble);
+
+        // === ПОДПИСЬ ПОД СООБЩЕНИЕМ (для всех кроме visitor) ===
+        if (message.sender !== "visitor") {
+          const senderEl = document.createElement("div");
+          senderEl.className = "chat-sender";
+
+          const avatarEl = document.createElement("div");
+          avatarEl.className = "chat-sender-avatar";
+          let label = "Op";
+          if (message.sender === "ai") {
+            label = "AI";
+            avatarEl.classList.add("ai");
+          } else if (message.sender === "owner") {
+            label = "Ow";
+            avatarEl.classList.add("owner");
+          } else {
+            label = "Op";
+            avatarEl.classList.add("operator");
+          }
+          avatarEl.textContent = label;
+
+          const nameEl = document.createElement("span");
+          nameEl.className = "chat-sender-name";
+          if (message.sender === "ai") {
+            nameEl.textContent = "AI";
+          } else if (message.sender === "owner") {
+            nameEl.textContent = "Owner";
+          } else {
+            nameEl.textContent = "Operator";
+          }
+
+          senderEl.appendChild(avatarEl);
+          senderEl.appendChild(nameEl);
+          wrapper.appendChild(senderEl);
+        }
 
         return wrapper;
       }
