@@ -98,7 +98,7 @@
       }
     }
 
-    iframe.src = `https://curly-scene-692e.pr-zt.workers.dev/widget.html?siteId=${siteId}&aiEnabled=${aiEnabled}`;
+    iframe.src = `https://cdn.flex-chat.net/widget.html?siteId=${siteId}&aiEnabled=${aiEnabled}`;
     // iframe.allowFullscreen = true;
     iframe.setAttribute("allow", "fullscreen");
     iframe.style.position = "fixed";
