@@ -2,14 +2,6 @@
   "name": "flex-chat",
   "compatibility_date": "2026-02-11",
   "main": "src/index.js",
-
-  "routes": [
-    {
-      "pattern": "cdn.flex-chat.net/*",
-      "zone_name": "flex-chat.net",
-    },
-  ],
-
   "assets": {
     "directory": "./assets",
     "binding": "ASSETS",
