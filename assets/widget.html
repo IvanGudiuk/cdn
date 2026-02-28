@@ -193,6 +193,18 @@
         color: rgba(157, 155, 155, 1);
       }
 
+      .widget-logo {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .widget-logo > img {
+        display: block;
+        width: 20px;
+        height: 20px;
+      }
+
       .flex {
         text-transform: capitalize;
         font-weight: bold;
@@ -503,11 +515,15 @@
         </div>
         <div class="powered">
           powered by
+
           <a
             href="https://flex-chat.com"
             target="_blank"
             title="https://flex-chat.com"
-            ><span class="flex">Flex</span><span class="chat">Chat</span></a
+            class="widget-logo"
+            ><img src="./chat-logo.png" alt="Logo" /><span class="flex"
+              >Flex</span
+            ><span class="chat">Chat</span></a
           >
         </div>
       </div>
@@ -595,6 +611,12 @@
       const params = new URLSearchParams(window.location.search);
       const siteId = params.get("siteId");
       const aiEnabled = params.get("aiEnabled") === "true";
+      const removeSign = params.get("removeSign") === "true";
+
+      if (removeSign) {
+        const powered = document.querySelector(".powered");
+        if (powered) powered.remove();
+      }
 
       if (!siteId) {
         console.error("FLEX_CHAT_ID is missing");

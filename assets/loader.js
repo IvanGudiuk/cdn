@@ -5,6 +5,7 @@
   const siteId = window?.FLEX_CHAT_ID || null;
 
   let aiEnabled = false;
+  let removeSign = false;
   let scrollPosition = 0;
 
   if (!siteId) {
@@ -29,6 +30,7 @@
   //     }
   //     if (data.aiEnabled) {
   //       aiEnabled = data.aiEnabled;
+  // removeSign = data.removeSign;
   //     }
   //     initWidget();
   //   })
@@ -98,7 +100,7 @@
       }
     }
 
-    iframe.src = `https://cdn.flex-chat.net/widget.html?siteId=${siteId}&aiEnabled=${aiEnabled}`;
+    iframe.src = `https://cdn.flex-chat.net/widget.html?siteId=${siteId}&aiEnabled=${aiEnabled}&removeSign=${removeSign}`;
     // iframe.allowFullscreen = true;
     iframe.setAttribute("allow", "fullscreen");
     iframe.style.position = "fixed";
