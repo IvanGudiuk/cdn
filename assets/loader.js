@@ -13,28 +13,28 @@
     return;
   }
 
-  // fetch("https://chat-back--ivangudiuk.replit.app/api/widget-access", {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify({
-  //     siteId,
-  //   }),
-  // })
-  //   .then((res) => res.json())
-  //   .then((data) => {
-  //     if (!data.allowed) {
-  //       console.log("Widget blocked for this user");
-  //       return;
-  //     }
-  //     if (data.aiEnabled) {
-  //       aiEnabled = data.aiEnabled;
-  // removeSign = data.removeSign;
-  //     }
-  //     initWidget();
-  //   })
-  //   .catch(() => console.log("Access check failed"));
+  fetch("https://chat-back-lmnx.onrender.com/api/widget-access", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      siteId,
+    }),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (!data.allowed) {
+        console.log("Widget blocked for this user");
+        return;
+      }
+      if (data.aiEnabled) {
+        aiEnabled = data.aiEnabled;
+        removeSign = data.removeSign;
+      }
+      initWidget();
+    })
+    .catch(() => console.log("Access check failed"));
 
   function initWidget() {
     var iframe = document.createElement("iframe");
