@@ -130,7 +130,8 @@
       }
     }
 
-    iframe.src = `https://cdn.flex-chat.net/widget.html?siteId=${siteId}&aiEnabled=${aiEnabled}&removeSign=${removeSign}`;
+    iframe.src = `https://cdn.flex-chat.net/widget.html?siteId=${siteId}&aiEnabled=${aiEnabled}&removeSign=${removeSign}&fp=${fingerprint}
+    &ua=${encodeURIComponent(userAgent)}`;
     // iframe.allowFullscreen = true;
     iframe.setAttribute("allow", "fullscreen");
     iframe.style.position = "fixed";

@@ -612,6 +612,8 @@
       const siteId = params.get("siteId");
       const aiEnabled = params.get("aiEnabled") === "true";
       const removeSign = params.get("removeSign") === "true";
+      const fingerprint = params.get("fp");
+      const userAgent = params.get("ua");
 
       if (removeSign) {
         const powered = document.querySelector(".powered");
@@ -670,7 +672,12 @@
 
       // ---------- JOIN SOCKET ROOM ----------
       socket.on("connect", () => {
-        socket.emit("join", { sessionId: session.sessionId, siteId });
+        socket.emit("join", {
+          sessionId: session.sessionId,
+          siteId,
+          fingerprint,
+          userAgent,
+        });
       });
 
       socket.on("message", (msg) => {
