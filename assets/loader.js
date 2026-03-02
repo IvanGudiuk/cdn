@@ -1,4 +1,4 @@
-(function () {
+(async function () {
   if (window.__MYCHAT_LOADED__) return;
   window.__MYCHAT_LOADED__ = true;
 
@@ -13,6 +13,31 @@
     return;
   }
 
+  async function generateFingerprint() {
+    const data = [
+      navigator.userAgent,
+      navigator.language,
+      screen.width,
+      screen.height,
+      new Date().getTimezoneOffset(),
+    ].join("::");
+
+    const encoder = new TextEncoder();
+    const hashBuffer = await crypto.subtle.digest(
+      "SHA-256",
+      encoder.encode(data)
+    );
+
+    return Array.from(new Uint8Array(hashBuffer))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+  }
+
+  const userAgent = navigator.userAgent;
+  const fingerprint = await generateFingerprint();
+
+  // visitorId, fingerprint, ipHash, userAgent
+
   fetch("https://chat-back-lmnx.onrender.com/api/widget-access", {
     method: "POST",
     headers: {
@@ -20,18 +45,23 @@
     },
     body: JSON.stringify({
       siteId,
+      fingerprint,
+      userAgent,
     }),
   })
-    .then((res) => res.json())
+    .then((res) => {
+      if (!res.ok) throw new Error("Server error");
+      return res.json();
+    })
     .then((data) => {
-      if (!data.allowed) {
+      if (!data?.allowed) {
         console.log("Widget blocked for this user");
         return;
       }
-      if (data.aiEnabled) {
-        aiEnabled = data.aiEnabled;
-        removeSign = data.removeSign;
-      }
+
+      aiEnabled = !!data.aiEnabled;
+      removeSign = !!data.removeSign;
+
       initWidget();
     })
     .catch(() => console.log("Access check failed"));
@@ -234,6 +264,4 @@
       mount();
     }
   }
-
-  initWidget();
 })();
