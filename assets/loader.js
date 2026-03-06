@@ -38,7 +38,7 @@
 
   // visitorId, fingerprint, ipHash, userAgent
 
-  fetch("https://64.226.108.226:8083/widget-access", {
+  fetch("https://sockets.flex-chat.net/widget-access", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
