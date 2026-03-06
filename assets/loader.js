@@ -38,7 +38,7 @@
 
   // visitorId, fingerprint, ipHash, userAgent
 
-  fetch("http://64.226.108.226:8083/widget-access", {
+  fetch("https://64.226.108.226:8083/widget-access", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
