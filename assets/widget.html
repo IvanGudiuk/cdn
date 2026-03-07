@@ -562,7 +562,7 @@
     </script>
 
     <script>
-      const socket = io("https://api.flex-chat.com", {
+      const socket = io("https://sockets.flex-chat.net", {
         transports: ["websocket"],
       });
     </script>
@@ -635,7 +635,7 @@
       // ---------- SESSION INIT ----------
       let session = JSON.parse(localStorage.getItem(STORAGE_KEY));
 
-      if (session.resolved) {
+      if (session?.resolved) {
         localStorage.removeItem(STORAGE_KEY);
       }
 
@@ -737,12 +737,12 @@
         bubble.classList.add("message");
 
         // === КЛАСС ОТПРАВИТЕЛЯ ===
-        if (message.sender === "visitor") {
+        if (message?.sender === "visitor") {
           bubble.classList.add("visitor");
         } else if (
-          message.sender === "operator" ||
-          message.sender === "ai" ||
-          message.sender === "owner"
+          message?.sender === "operator" ||
+          message?.sender === "ai" ||
+          message?.sender === "owner"
         ) {
           bubble.classList.add("agent");
         }
