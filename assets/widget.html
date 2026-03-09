@@ -677,6 +677,7 @@
           siteId,
           fingerprint,
           userAgent,
+          role: "visitor",
         });
       });
 
@@ -971,7 +972,7 @@
 
           saveMessage(message);
 
-          // socket.emit("message", message);
+          socket.emit("message", message);
 
           fileInput.value = "";
         } catch (err) {
