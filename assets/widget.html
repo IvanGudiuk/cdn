@@ -658,7 +658,7 @@
           const welcomeText = translations[lang] || translations.en;
 
           session.messages.push({
-            sender: "ai",
+            sender: aiEnabled ? "ai" : "system",
             createdAt: new Date().toISOString(),
             content: {
               type: "text",
@@ -933,19 +933,26 @@
         const file = fileInput.files[0];
         if (!file) return;
 
+        const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
+        if (file.size > MAX_FILE_SIZE) {
+          alert("File is too large. Max size 10MB");
+          return;
+        }
+
         try {
           const formData = new FormData();
           formData.append("file", file);
 
-          // const uploadRes = await fetch(
-          //   "https://api.flex-chat.com/api/upload",
-          //   {
-          //     method: "POST",
-          //     body: formData,
-          //   }
-          // );
+          const uploadRes = await fetch(
+            "https://chat-back-lmnx.onrender.com/api/upload",
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
 
-          // const uploadData = await uploadRes.json();
+          const uploadData = await uploadRes.json();
 
           const localUrl = URL.createObjectURL(file);
 
