@@ -743,7 +743,8 @@
         } else if (
           message?.sender === "operator" ||
           message?.sender === "ai" ||
-          message?.sender === "owner"
+          message?.sender === "owner" ||
+          message?.sender === "system"
         ) {
           bubble.classList.add("agent");
         }
@@ -805,6 +806,9 @@
           } else if (message.sender === "owner") {
             label = "Ow";
             avatarEl.classList.add("owner");
+          } else if (message.sender === "system") {
+            label = "Sys";
+            avatarEl.classList.add("operator");
           } else {
             label = "Op";
             avatarEl.classList.add("operator");
