@@ -762,7 +762,7 @@
           bubble.appendChild(video);
         }
 
-        if (type === image && file?.url) {
+        if (type === "image" && file?.url) {
           const img = document.createElement("img");
           img.src = file.url;
           img.className = "chat-image";
