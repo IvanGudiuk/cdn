@@ -762,7 +762,7 @@
           bubble.appendChild(video);
         }
 
-        if (type === "image" && file?.url) {
+        if (type === image && file?.url) {
           const img = document.createElement("img");
           img.src = file.url;
           img.className = "chat-image";
@@ -905,8 +905,11 @@
       const attachBtn = document.getElementById("attachBtn");
 
       function sendFileMessage(url, file) {
-        const messageType =
-          file.type && file.type.startsWith("image/") ? "image" : "file";
+        const messageType = file.type?.startsWith("image/")
+          ? "image"
+          : file.type?.startsWith("video/")
+          ? "video"
+          : "file";
 
         const message = {
           sender: "visitor",
@@ -1003,7 +1006,7 @@
                 type: messageType,
                 text: "",
                 file: {
-                  url: localUrl,
+                  url: uploadData.url,
                   name: file.name,
                   size: file.size,
                   mime: file.type,
@@ -1016,7 +1019,6 @@
             if (el) {
               messagesContainer.appendChild(el);
               messagesContainer.scrollTop = messagesContainer.scrollHeight;
-              URL.revokeObjectURL(localUrl);
             }
 
             saveMessage(message);
