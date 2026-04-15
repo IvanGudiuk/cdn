@@ -8,6 +8,7 @@
   let removeSign = false;
   let resolved = false;
   let scrollPosition = 0;
+  const STORAGE_KEY = "mychat_session";
 
   if (!siteId) {
     console.log("No site ID, widget will not render");
@@ -26,7 +27,7 @@
     const encoder = new TextEncoder();
     const hashBuffer = await crypto.subtle.digest(
       "SHA-256",
-      encoder.encode(data)
+      encoder.encode(data),
     );
 
     return Array.from(new Uint8Array(hashBuffer))
@@ -36,6 +37,10 @@
 
   const userAgent = navigator.userAgent;
   const fingerprint = await generateFingerprint();
+  const currentSession = JSON.parse(
+    localStorage.getItem(STORAGE_KEY) || "null",
+  );
+  const sessionId = currentSession?.sessionId || null;
 
   // visitorId, fingerprint, ipHash, userAgent
 
@@ -48,6 +53,7 @@
       siteId,
       fingerprint,
       userAgent,
+      sessionId,
     }),
   })
     .then((res) => {
