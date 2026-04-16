@@ -721,6 +721,7 @@
 
       socket.on("message", (msg) => {
         hideTyping();
+        console.log("message", msg);
 
         const el = renderMessage(msg);
         if (el) {
