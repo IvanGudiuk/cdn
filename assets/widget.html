@@ -783,6 +783,12 @@
         }
 
         const { type, text, file } = message.content;
+        const messageTime =
+          message.createdAt ||
+          message.created_at ||
+          message.timestamp ||
+          message.time ||
+          null;
 
         const wrapper = document.createElement("div");
         wrapper.classList.add("chat-message");
@@ -834,7 +840,7 @@
           bubble.appendChild(link);
         }
 
-        if (message.createdAt) {
+        if (messageTime) {
           const timeEl = document.createElement("div");
           timeEl.classList.add("chat-time");
           if (message.sender === "visitor") {
@@ -842,7 +848,7 @@
           } else {
             timeEl.classList.add("agent-time");
           }
-          timeEl.textContent = formatTime(message.createdAt);
+          timeEl.textContent = formatTime(messageTime);
           bubble.appendChild(timeEl);
         }
 
