@@ -563,6 +563,7 @@
     </div>
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <script type="module">
+      import heic2any from "https://cdn.jsdelivr.net/npm/heic2any@0.0.4/+esm";
       import { EmojiButton } from "https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4/+esm";
 
       const emojiBtn = document.getElementById("emojiBtn");
@@ -882,7 +883,7 @@
             avatarEl.classList.add("owner");
           } else if (message.sender === "system") {
             label = "Sys";
-            avatarEl.classList.add("system");
+            avatarEl.classList.add("operator");
           } else {
             label = "Op";
             avatarEl.classList.add("operator");
@@ -1092,12 +1093,15 @@
 
           if (file.size > MAX_FILE_SIZE) {
             alert("File is too large. Max size 10MB");
+
             const errorEl = createUploadStatusMessage(
               "File is too large. Max size 10MB.",
               true,
             );
+
             messagesContainer.appendChild(errorEl);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
             fileInput.value = "";
             return;
           }
@@ -1107,8 +1111,30 @@
           messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
           try {
+            let processedFile = file;
+
+            const isHeic =
+              file.type === "image/heic" ||
+              file.type === "image/heic-sequence" ||
+              file.name.toLowerCase().endsWith(".heic");
+
+            // 🔥 HEIC → JPEG conversion
+            if (isHeic) {
+              const blob = await heic2any({
+                blob: file,
+                toType: "image/jpeg",
+                quality: 0.9,
+              });
+
+              processedFile = new File(
+                [blob],
+                file.name.replace(/\.heic$/i, ".jpg"),
+                { type: "image/jpeg" },
+              );
+            }
+
             const formData = new FormData();
-            formData.append("file", file);
+            formData.append("file", processedFile); // ✅ FIXED
 
             const uploadRes = await fetch(
               "https://api.flex-chat.net/api/upload",
@@ -1124,11 +1150,11 @@
 
             const uploadData = await uploadRes.json();
 
-            const localUrl = URL.createObjectURL(file);
-
-            const messageType = file.type.startsWith("image/")
+            const messageType = processedFile.type.startsWith("image/")
               ? "image"
-              : "file";
+              : processedFile.type.startsWith("video/")
+                ? "video"
+                : "file";
 
             const message = {
               sender: "visitor",
@@ -1137,12 +1163,11 @@
               createdAt: new Date().toISOString(),
               content: {
                 type: messageType,
-                text: "",
                 file: {
                   url: uploadData.url,
-                  name: file.name,
-                  size: file.size,
-                  mime: file.type,
+                  name: processedFile.name, // ✅ FIXED
+                  size: processedFile.size,
+                  mime: processedFile.type,
                 },
               },
             };
@@ -1156,23 +1181,28 @@
 
             saveMessage(message);
 
-            sendFileMessage(uploadData.url, file);
+            sendFileMessage(uploadData.url, processedFile);
 
             if (loadingEl.parentNode) {
               loadingEl.parentNode.removeChild(loadingEl);
             }
+
             fileInput.value = "";
           } catch (err) {
             console.error("File send error:", err);
+
             if (loadingEl.parentNode) {
               loadingEl.parentNode.removeChild(loadingEl);
             }
+
             const errorEl = createUploadStatusMessage(
               "Failed to upload file. Please try again.",
               true,
             );
+
             messagesContainer.appendChild(errorEl);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
             fileInput.value = "";
           }
         });
