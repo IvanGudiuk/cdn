@@ -1215,21 +1215,55 @@
       let typingInterval = null;
 
       // Функция показа "typing..."
-      function showTyping() {
-        if (!typingDiv) {
-          typingDiv = document.createElement("div");
-          typingDiv.className = "message agent";
-          typingDiv.textContent = "typing.";
-          messagesContainer.appendChild(typingDiv);
-          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      function showTyping(sender = "operator") {
+        if (typingDiv) return;
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "chat-message";
+
+        const bubble = document.createElement("div");
+        bubble.className = "message agent";
+        bubble.textContent = "typing.";
+
+        // === аватар + имя ===
+        const senderEl = document.createElement("div");
+        senderEl.className = "chat-sender";
+
+        const avatarEl = document.createElement("div");
+        avatarEl.className = "chat-sender-avatar";
+
+        let label = "Op";
+
+        if (sender === "owner") {
+          avatarEl.classList.add("owner");
+          label = "Ow";
+        } else {
+          avatarEl.classList.add("operator");
+          label = "Op";
         }
+
+        avatarEl.textContent = label;
+
+        const nameEl = document.createElement("span");
+        nameEl.className = "chat-sender-name";
+        nameEl.textContent = sender === "owner" ? "Owner" : "Operator";
+
+        senderEl.appendChild(avatarEl);
+        senderEl.appendChild(nameEl);
+
+        wrapper.appendChild(bubble);
+        wrapper.appendChild(senderEl);
+
+        messagesContainer.appendChild(wrapper);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        typingDiv = wrapper;
 
         let dotCount = 1;
         typingInterval = setInterval(() => {
           dotCount = (dotCount % 3) + 1;
-          typingDiv.textContent = "typing" + ".".repeat(dotCount);
-          messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }, 500); // меняем точки каждые 0.5 сек
+          bubble.textContent = "typing" + ".".repeat(dotCount);
+        }, 500);
       }
 
       // Функция скрытия "typing..."
