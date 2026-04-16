@@ -556,9 +556,7 @@
             ><img
               src="https://res.cloudinary.com/dhqhnlrnb/image/upload/v1776331482/chat-logo_s9ckkr.png"
               alt="FlexChat logo"
-            /><span class="flex"
-              >FlexChat</span
-            ></a
+            /><span class="flex">FlexChat</span></a
           >
         </div>
       </div>
@@ -1113,7 +1111,7 @@
             formData.append("file", file);
 
             const uploadRes = await fetch(
-              "https://chat-back-lmnx.onrender.com/api/upload",
+              "https://api.flex-chat.net/api/upload",
               {
                 method: "POST",
                 body: formData,
