@@ -178,7 +178,7 @@
           -apple-system,
           BlinkMacSystemFont,
           sans-serif;
-        overflow-y: hidden;
+        overflow-y: auto;
         padding: 12px;
         border-bottom: 1px solid #ddd;
         outline: none;
@@ -621,7 +621,7 @@
           textarea.style.overflowY = "auto";
         } else {
           textarea.style.height = textarea.scrollHeight + "px";
-          textarea.style.overflowY = "hidden";
+          textarea.style.overflowY = "auto";
         }
 
         messages.scrollTop = messages.scrollHeight;
@@ -720,6 +720,35 @@
       const messagesContainer = document.querySelector(".messages");
       const msgInput = document.getElementById("chat-input");
       const sendBtn = document.querySelector(".send-btn");
+      let typingStopTimeout = null;
+
+      function emitVisitorTyping() {
+        if (!session?.sessionId || !siteId) return;
+        socket.emit("visitor_typing", {
+          sessionId: session.sessionId,
+          siteId,
+          sender: "visitor",
+        });
+      }
+
+      function emitVisitorTypingStopped() {
+        if (!session?.sessionId || !siteId) return;
+        socket.emit("visitor_typing_stopped", {
+          sessionId: session.sessionId,
+          siteId,
+          sender: "visitor",
+        });
+      }
+
+      function scheduleTypingStopped() {
+        if (typingStopTimeout) {
+          clearTimeout(typingStopTimeout);
+        }
+        typingStopTimeout = setTimeout(() => {
+          emitVisitorTypingStopped();
+          typingStopTimeout = null;
+        }, 2500);
+      }
 
       // ---------- TIME FORMAT ----------
       function formatTime(dateString) {
@@ -912,6 +941,11 @@
         saveMessage(message);
 
         socket.emit("message", message);
+        emitVisitorTypingStopped();
+        if (typingStopTimeout) {
+          clearTimeout(typingStopTimeout);
+          typingStopTimeout = null;
+        }
 
         msgInput.value = "";
         msgInput.style.height = "auto";
@@ -923,6 +957,28 @@
         if (e.key === "Enter" && !e.shiftKey) {
           e.preventDefault();
           sendMessage();
+        }
+      });
+
+      msgInput.addEventListener("input", () => {
+        if (!msgInput.value.trim()) {
+          emitVisitorTypingStopped();
+          if (typingStopTimeout) {
+            clearTimeout(typingStopTimeout);
+            typingStopTimeout = null;
+          }
+          return;
+        }
+
+        emitVisitorTyping();
+        scheduleTypingStopped();
+      });
+
+      msgInput.addEventListener("blur", () => {
+        emitVisitorTypingStopped();
+        if (typingStopTimeout) {
+          clearTimeout(typingStopTimeout);
+          typingStopTimeout = null;
         }
       });
 
@@ -1100,11 +1156,23 @@
       }
 
       // Обработка события от сервера
-      socket.on("operator_typing", () => {
+      socket.on("operator_typing", (payload) => {
+        console.log("[ws] operator_typing received", payload);
         showTyping();
       });
 
-      socket.on("operator_typing_stopped", () => {
+      socket.on("operator_typing_stopped", (payload) => {
+        console.log("[ws] operator_typing_stopped received", payload);
+        hideTyping();
+      });
+
+      socket.on("owner_typing", (payload) => {
+        console.log("[ws] owner_typing received", payload);
+        showTyping();
+      });
+
+      socket.on("owner_typing_stopped", (payload) => {
+        console.log("[ws] owner_typing_stopped received", payload);
         hideTyping();
       });
 
