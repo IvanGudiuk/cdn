@@ -566,6 +566,8 @@
       import heic2any from "https://cdn.jsdelivr.net/npm/heic2any@0.0.4/+esm";
       import { EmojiButton } from "https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4/+esm";
 
+      window.heic2any = heic2any;
+
       const emojiBtn = document.getElementById("emojiBtn");
       const textar = document.getElementById("chat-input");
 
@@ -1120,7 +1122,7 @@
 
             // 🔥 HEIC → JPEG conversion
             if (isHeic) {
-              const blob = await heic2any({
+              const blob = await window.heic2any({
                 blob: file,
                 toType: "image/jpeg",
                 quality: 0.9,
