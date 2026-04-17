@@ -37,10 +37,15 @@
 
   const userAgent = navigator.userAgent;
   const fingerprint = await generateFingerprint();
-  const currentSession = JSON.parse(
-    localStorage.getItem(STORAGE_KEY) || "null",
-  );
-  const sessionId = currentSession?.sessionId || null;
+  let currentSession = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+  if (!currentSession) {
+    currentSession = {
+      sessionId: crypto.randomUUID(),
+    };
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(currentSession));
+  }
+  const sessionId = currentSession?.sessionId;
 
   // visitorId, fingerprint, ipHash, userAgent
 
@@ -138,7 +143,7 @@
       }
     }
 
-    iframe.src = `https://cdn.flex-chat.net/widget.html?siteId=${siteId}&aiEnabled=${aiEnabled}&removeSign=${removeSign}&resolved=${resolved}&fp=${fingerprint}
+    iframe.src = `https://cdn.flex-chat.net/widget.html?siteId=${siteId}&sessionId=${sessionId}&aiEnabled=${aiEnabled}&removeSign=${removeSign}&resolved=${resolved}&fp=${fingerprint}
     &ua=${encodeURIComponent(userAgent)}`;
     // iframe.allowFullscreen = true;
     iframe.setAttribute("allow", "fullscreen");

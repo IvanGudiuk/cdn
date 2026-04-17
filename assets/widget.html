@@ -646,6 +646,7 @@
 
       const params = new URLSearchParams(window.location.search);
       const siteId = params.get("siteId");
+      const sessionIdFromParent = params.get("sessionId");
       const aiEnabled = params.get("aiEnabled") === "true";
       const removeSign = params.get("removeSign") === "true";
       const resolved = params.get("resolved") === "true";
@@ -679,9 +680,11 @@
 
       if (!session) {
         session = {
-          sessionId: crypto.randomUUID(),
+          sessionId: sessionIdFromParent || crypto.randomUUID(),
           messages: [],
         };
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
 
         if (session.messages.length === 0) {
           const translations = {
@@ -933,9 +936,11 @@
 
         if (!session) {
           session = {
-            sessionId: crypto.randomUUID(),
+            sessionId: sessionIdFromParent || crypto.randomUUID(),
             messages: [],
           };
+
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
 
           localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
 
@@ -1003,12 +1008,6 @@
           typingStopTimeout = null;
         }
       });
-
-      // socket.on("message", (msg) => {
-      //   hideTyping();
-      //   renderMessage(msg);
-      //   saveMessage(msg);
-      // });
     </script>
     <script>
       const fileInput = document.getElementById("fileInput");
