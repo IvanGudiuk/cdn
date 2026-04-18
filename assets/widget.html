@@ -1281,7 +1281,7 @@
       // Обработка события от сервера
       socket.on("operator_typing", (payload) => {
         console.log("[ws] operator_typing received", payload);
-        showTyping();
+        showTyping("operator");
       });
 
       socket.on("operator_typing_stopped", (payload) => {
@@ -1291,7 +1291,7 @@
 
       socket.on("owner_typing", (payload) => {
         console.log("[ws] owner_typing received", payload);
-        showTyping();
+        showTyping("owner");
       });
 
       socket.on("owner_typing_stopped", (payload) => {
