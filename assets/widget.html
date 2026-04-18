@@ -49,6 +49,7 @@
         inset: 0;
         width: 100%;
         height: 100dvh;
+        height: 100%;
         background: linear-gradient(
           90deg,
           #f5f7ff 0%,
@@ -1215,7 +1216,7 @@
       let typingInterval = null;
 
       // Функция показа "typing..."
-      function showTyping(sender = "operator") {
+      function  (sender = "operator") {
         if (typingDiv) return;
 
         const wrapper = document.createElement("div");
@@ -1281,7 +1282,7 @@
       // Обработка события от сервера
       socket.on("operator_typing", (payload) => {
         console.log("[ws] operator_typing received", payload);
-        showTyping("operator");
+          ("operator");
       });
 
       socket.on("operator_typing_stopped", (payload) => {
