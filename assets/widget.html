@@ -338,6 +338,17 @@
         border: none;
       }
 
+      .char-counter {
+        font-size: 11px;
+        color: #999;
+        text-align: right;
+        padding: 4px 8px;
+      }
+
+      .char-counter.limit {
+        color: #e11d48;
+      }
+
       .emoji-wrapper {
         display: flex;
         align-items: center;
@@ -474,10 +485,12 @@
 
       <div class="footer">
         <div class="input-wrap">
+          <div class="char-counter" id="charCounter">800</div>
           <textarea
             id="chat-input"
             placeholder="Type a message..."
             rows="1"
+            maxlength="800"
           ></textarea>
           <div class="chat-input-wrapper">
             <div class="emoji-wrapper">
@@ -641,9 +654,22 @@
     <script type="module">
       const textarea = document.getElementById("chat-input");
       const messages = document.querySelector(".messages");
+      const counterEl = document.getElementById("charCounter");
+
+      const MAX_LENGTH = 800;
 
       textarea.addEventListener("input", () => {
         textarea.style.height = "auto";
+        const length = textareaEl.value.length;
+        const remaining = MAX_LENGTH - length;
+
+        counterEl.textContent = remaining;
+
+        if (remaining <= 50) {
+          counterEl.classList.add("limit");
+        } else {
+          counterEl.classList.remove("limit");
+        }
 
         const maxHeight = parseFloat(getComputedStyle(textarea).maxHeight);
 
@@ -950,6 +976,11 @@
       function sendMessage() {
         const text = msgInput.value.trim();
         if (!text) return;
+
+        if (text.length > 800) {
+          alert("Message is too long (max 800 characters)");
+          return;
+        }
 
         if (!session) {
           session = {
