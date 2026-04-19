@@ -580,6 +580,13 @@
       const picker = new EmojiButton({
         position: "top-start",
         rootElement: document.querySelector(".widget"),
+        showPreview: false,
+        autoHide: true,
+        showRecents: true,
+        showSearch: true,
+        showVariants: true,
+        showAnimation: false,
+        zIndex: 10000,
       });
 
       emojiBtn.addEventListener("click", () => {
