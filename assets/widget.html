@@ -660,7 +660,7 @@
 
       textarea.addEventListener("input", () => {
         textarea.style.height = "auto";
-        const length = textareaEl.value.length;
+        const length = textarea.value.length;
         const remaining = MAX_LENGTH - length;
 
         counterEl.textContent = remaining;
