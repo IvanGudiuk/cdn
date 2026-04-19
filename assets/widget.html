@@ -336,10 +336,12 @@
         width: 100%;
         background-color: rgba(184, 182, 182, 0.1);
         border: none;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
       }
 
       .char-counter {
-        font-size: 11px;
+        font-size: 8px;
         color: #999;
         text-align: right;
         padding: 4px 8px;
@@ -485,7 +487,6 @@
 
       <div class="footer">
         <div class="input-wrap">
-          <div class="char-counter" id="charCounter">800</div>
           <textarea
             id="chat-input"
             placeholder="Type a message..."
@@ -493,6 +494,7 @@
             maxlength="800"
           ></textarea>
           <div class="chat-input-wrapper">
+            <div class="char-counter" id="charCounter">800</div>
             <div class="emoji-wrapper">
               <button
                 id="attachBtn"
