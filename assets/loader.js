@@ -10,6 +10,21 @@
   let scrollPosition = 0;
   const STORAGE_KEY = "mychat_session";
 
+  function getCookie(name) {
+    return document.cookie
+      .split("; ")
+      .find((row) => row.startsWith(name + "="))
+      ?.split("=")[1];
+  }
+
+  function setCookie(name, value) {
+    const isSecure = location.protocol === "https:";
+
+    document.cookie = `${name}=${value}; path=/; max-age=31536000; ${
+      isSecure ? "SameSite=None; Secure" : ""
+    }`;
+  }
+
   if (!siteId) {
     console.log("No site ID, widget will not render");
     return;
@@ -37,15 +52,36 @@
 
   const userAgent = navigator.userAgent;
   const fingerprint = await generateFingerprint();
-  let currentSession = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
-  if (!currentSession) {
-    currentSession = {
-      sessionId: crypto.randomUUID(),
-    };
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(currentSession));
+  let currentSession = null;
+
+  try {
+    currentSession = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  } catch (e) {
+    currentSession = null;
   }
-  const sessionId = currentSession?.sessionId;
+
+  // 1. пробуем взять sessionId из localStorage
+  let sessionId = currentSession?.sessionId;
+
+  // 2. если нет — пробуем cookie
+  if (!sessionId) {
+    const cookieSessionId = getCookie("chat_session");
+    if (cookieSessionId) {
+      sessionId = cookieSessionId;
+    }
+  }
+
+  // 3. если вообще ничего нет — создаём
+  if (!sessionId) {
+    sessionId = crypto.randomUUID();
+  }
+
+  // 4. синхронизируем ВСЁ
+  currentSession = { sessionId };
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(currentSession));
+  setCookie("chat_session", sessionId);
 
   // visitorId, fingerprint, ipHash, userAgent
 
@@ -143,8 +179,7 @@
       }
     }
 
-    iframe.src = `https://cdn.flex-chat.net/widget.html?siteId=${siteId}&sessionId=${sessionId}&aiEnabled=${aiEnabled}&removeSign=${removeSign}&resolved=${resolved}&fp=${fingerprint}
-    &ua=${encodeURIComponent(userAgent)}`;
+    iframe.src = `https://cdn.flex-chat.net/widget.html?siteId=${siteId}&sessionId=${sessionId}&aiEnabled=${aiEnabled}&removeSign=${removeSign}&resolved=${resolved}&fp=${fingerprint}&ua=${encodeURIComponent(userAgent)}`;
     // iframe.allowFullscreen = true;
     iframe.setAttribute("allow", "fullscreen");
     iframe.style.position = "fixed";
