@@ -701,6 +701,8 @@
         session = null;
       }
 
+      const messagesContainer = document.querySelector(".messages");
+
       if (!session) {
         session = {
           sessionId: sessionIdFromParent || crypto.randomUUID(),
@@ -763,7 +765,6 @@
         saveMessage(msg);
       });
 
-      const messagesContainer = document.querySelector(".messages");
       const msgInput = document.getElementById("chat-input");
       const sendBtn = document.querySelector(".send-btn");
       let typingStopTimeout = null;
