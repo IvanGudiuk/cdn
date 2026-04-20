@@ -708,7 +708,7 @@
 
         localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
 
-        if (messages.length === 0) {
+        function renderWelcomeMessage() {
           const translations = {
             en: "👋 Hi! How can we help you?",
             ru: "👋 Привет! Чем можем помочь?",
@@ -720,18 +720,24 @@
           const lang = (navigator.language || "en").split("-")[0];
           const welcomeText = translations[lang] || translations.en;
 
-          messages.push({
+          const welcomeMsg = {
             sender: aiEnabled ? "ai" : "system",
             createdAt: new Date().toISOString(),
             content: {
               type: "text",
               text: welcomeText,
             },
-          });
+          };
+
+          const el = renderMessage(welcomeMsg);
+          if (el) {
+            messagesContainer.appendChild(el);
+          }
         }
 
-        localStorage.setItem(MESSAGES_KEY, JSON.stringify(messages));
-      }
+        if (messages.length === 0) {
+          renderWelcomeMessage();
+        }
 
       // ---------- JOIN SOCKET ROOM ----------
       socket.on("connect", () => {
