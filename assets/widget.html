@@ -966,10 +966,10 @@
 
           localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
 
-          socket.emit("join", {
-            sessionId: session?.sessionId || null,
-            siteId,
-          });
+          // socket.emit("join", {
+          //   sessionId: session?.sessionId || null,
+          //   siteId,
+          // });
 
           msgInput.disabled = false;
           sendBtn.disabled = false;
