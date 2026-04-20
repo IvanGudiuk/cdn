@@ -643,7 +643,7 @@
     </script>
     <script type="module">
       const textarea = document.getElementById("chat-input");
-      const messages = document.querySelector(".messages");
+      const messagesElements = document.querySelector(".messages");
 
       textarea.addEventListener("input", () => {
         textarea.style.height = "auto";
@@ -658,11 +658,12 @@
           textarea.style.overflowY = "auto";
         }
 
-        messages.scrollTop = messages.scrollHeight;
+        messagesElements.scrollTop = messagesElements.scrollHeight;
       });
     </script>
     <script>
       const STORAGE_KEY = "mychat_session";
+      const MESSAGES_KEY = "mychat_messages";
 
       const params = new URLSearchParams(window.location.search);
       const siteId = params.get("siteId");
@@ -692,6 +693,7 @@
 
       // ---------- SESSION INIT ----------
       let session = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      let messages = JSON.parse(localStorage.getItem(MESSAGES_KEY)) || [];
 
       if (resolved || session?.resolved) {
         localStorage.removeItem(STORAGE_KEY);
@@ -701,12 +703,11 @@
       if (!session) {
         session = {
           sessionId: sessionIdFromParent || crypto.randomUUID(),
-          messages: [],
         };
 
         localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
 
-        if (session.messages.length === 0) {
+        if (messages.length === 0) {
           const translations = {
             en: "👋 Hi! How can we help you?",
             ru: "👋 Привет! Чем можем помочь?",
@@ -718,7 +719,7 @@
           const lang = (navigator.language || "en").split("-")[0];
           const welcomeText = translations[lang] || translations.en;
 
-          session.messages.push({
+          messages.push({
             sender: aiEnabled ? "ai" : "system",
             createdAt: new Date().toISOString(),
             content: {
@@ -728,13 +729,13 @@
           });
         }
 
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+        localStorage.setItem(MESSAGES_KEY, JSON.stringify(messages));
       }
 
       // ---------- JOIN SOCKET ROOM ----------
       socket.on("connect", () => {
         socket.emit("join", {
-          sessionId: session.sessionId,
+          sessionId: session?.sessionId || null,
           siteId,
           fingerprint,
           userAgent,
@@ -744,7 +745,6 @@
 
       socket.on("message", (msg) => {
         hideTyping();
-        console.log("message", msg);
 
         const el = renderMessage(msg);
         if (el) {
@@ -938,12 +938,12 @@
 
       // ---------- SAVE MESSAGE ----------
       function saveMessage(msg) {
-        session.messages.push(msg);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+        messages.push(msg);
+        localStorage.setItem(MESSAGES_KEY, JSON.stringify(messages));
       }
 
       // ---------- LOAD OLD MESSAGES ----------
-      session.messages.forEach((msg) => {
+      messages.forEach((msg) => {
         const el = renderMessage(msg);
         if (el) {
           messagesContainer.appendChild(el);
@@ -962,14 +962,14 @@
         if (!session) {
           session = {
             sessionId: sessionIdFromParent || crypto.randomUUID(),
-            messages: [],
           };
 
           localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
 
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
-
-          socket.emit("join", { sessionId: session.sessionId, siteId });
+          socket.emit("join", {
+            sessionId: session?.sessionId || null,
+            siteId,
+          });
 
           msgInput.disabled = false;
           sendBtn.disabled = false;
@@ -981,7 +981,7 @@
           siteId,
           status: "sent",
           createdAt: new Date().toISOString(),
-          sessionId: session.sessionId,
+          sessionId: session?.sessionId,
         };
 
         const el = renderMessage(message);
@@ -1240,7 +1240,7 @@
       let typingInterval = null;
 
       // Функция показа "typing..."
-      function  (sender = "operator") {
+      function showTyping(sender = "operator") {
         if (typingDiv) return;
 
         const wrapper = document.createElement("div");
@@ -1306,7 +1306,7 @@
       // Обработка события от сервера
       socket.on("operator_typing", (payload) => {
         console.log("[ws] operator_typing received", payload);
-          ("operator");
+        showTyping("operator");
       });
 
       socket.on("operator_typing_stopped", (payload) => {

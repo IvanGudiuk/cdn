@@ -8,7 +8,9 @@
   let removeSign = false;
   let resolved = false;
   let scrollPosition = 0;
+
   const STORAGE_KEY = "mychat_session";
+  const MESSAGES_KEY = "mychat_messages";
 
   function getCookie(name) {
     return document.cookie
@@ -110,6 +112,14 @@
       aiEnabled = !!data.aiEnabled;
       removeSign = !!data.removeSign;
       resolved = !!data.resolved;
+
+      if (Array.isArray(data.messages)) {
+        try {
+          localStorage.setItem(MESSAGES_KEY, JSON.stringify(data.messages));
+        } catch (e) {
+          console.warn("Failed to save messages");
+        }
+      }
 
       initWidget();
     })
