@@ -697,6 +697,7 @@
 
       if (resolved || session?.resolved) {
         localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(MESSAGES_KEY);
         session = null;
       }
 
