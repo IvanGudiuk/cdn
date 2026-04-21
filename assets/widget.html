@@ -674,6 +674,15 @@
       const fingerprint = params.get("fp");
       const userAgent = params.get("ua");
 
+      function clearCookies() {
+        document.cookie.split(";").forEach((cookie) => {
+          const name = cookie.split("=")[0].trim();
+
+          document.cookie =
+            name + "=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;";
+        });
+      }
+
       if (removeSign) {
         const powered = document.querySelector(".powered");
         if (powered) powered.remove();
@@ -698,6 +707,9 @@
       if (resolved || session?.resolved) {
         localStorage.removeItem(STORAGE_KEY);
         localStorage.removeItem(MESSAGES_KEY);
+
+        clearCookies();
+
         session = null;
       }
 
@@ -1353,6 +1365,15 @@
 
         msgInput.disabled = true;
         sendBtn.disabled = true;
+      });
+
+      socket.on("disconnect", () => {
+        console.log("[ws] disconnected → force hide typing");
+        hideTyping();
+      });
+
+      socket.on("connect_error", () => {
+        hideTyping();
       });
     </script>
   </body>
