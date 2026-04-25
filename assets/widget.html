@@ -186,7 +186,6 @@
         display: flex;
         flex-direction: column;
         border-radius: 10px;
-        border: 1px solid #ddd;
       }
 
       input {
@@ -550,8 +549,8 @@
             <div>
               <div class="email-gate-title">Enter your email to start</div>
               <p class="email-gate-text">
-                Please leave your email so we can identify your conversation and
-                continue helping you if the chat is interrupted.
+                Please leave your email so we have your contact and can always
+                help you.
               </p>
             </div>
             <div class="email-input-row">
@@ -769,6 +768,7 @@
       const resolved = params.get("resolved") === "true";
       const fingerprint = params.get("fp");
       const userAgent = params.get("ua");
+      const emailFromParent = params.get("email");
 
       function clearCookies() {
         document.cookie.split(";").forEach((cookie) => {
@@ -898,10 +898,18 @@
         if (emailInput) {
           emailInput.value = visitorEmail;
         }
+        parent.postMessage({ type: "MYCHAT_EMAIL", email: visitorEmail }, "*");
         emitJoin();
       }
 
       visitorEmail = hydrateVisitorEmail();
+      if (!visitorEmail && emailFromParent) {
+        persistVisitorEmail(emailFromParent);
+        visitorEmail = normalizeEmail(emailFromParent);
+      }
+      if (visitorEmail) {
+        parent.postMessage({ type: "MYCHAT_EMAIL", email: visitorEmail }, "*");
+      }
 
       if (!session) {
         session = {

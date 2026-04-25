@@ -11,6 +11,8 @@
 
   const STORAGE_KEY = "mychat_session";
   const MESSAGES_KEY = "mychat_messages";
+  const EMAIL_STORAGE_KEY = "mychat_email";
+  const EMAIL_COOKIE_KEY = "mychat_email";
 
   function getCookie(name) {
     return document.cookie
@@ -25,6 +27,31 @@
     document.cookie = `${name}=${value}; path=/; max-age=31536000; ${
       isSecure ? "SameSite=None; Secure" : ""
     }`;
+  }
+
+  function normalizeEmail(email) {
+    return (email || "").trim().toLowerCase();
+  }
+
+  function persistEmail(email) {
+    const normalizedEmail = normalizeEmail(email);
+    if (!normalizedEmail) return "";
+
+    localStorage.setItem(EMAIL_STORAGE_KEY, normalizedEmail);
+    setCookie(EMAIL_COOKIE_KEY, normalizedEmail);
+    return normalizedEmail;
+  }
+
+  function getStoredEmail() {
+    const localEmail = normalizeEmail(localStorage.getItem(EMAIL_STORAGE_KEY));
+    const cookieEmail = normalizeEmail(getCookie(EMAIL_COOKIE_KEY));
+    const storedEmail = localEmail || cookieEmail;
+
+    if (storedEmail) {
+      persistEmail(storedEmail);
+    }
+
+    return storedEmail;
   }
 
   if (!siteId) {
@@ -86,19 +113,30 @@
   setCookie("chat_session", sessionId);
 
   // visitorId, fingerprint, ipHash, userAgent
+  let visitorEmail = getStoredEmail();
 
-  fetch("https://sockets.flex-chat.net/widget-access", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
+  function requestWidgetAccess(email = visitorEmail) {
+    const payload = {
       siteId,
       fingerprint,
       userAgent,
       sessionId,
-    }),
-  })
+    };
+
+    if (email) {
+      payload.email = email;
+    }
+
+    return fetch("https://sockets.flex-chat.net/widget-access", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+  }
+
+  requestWidgetAccess()
     .then((res) => {
       if (!res.ok) throw new Error("Server error");
       return res.json();
@@ -189,7 +227,7 @@
       }
     }
 
-    iframe.src = `https://cdn.flex-chat.net/widget.html?siteId=${siteId}&sessionId=${sessionId}&aiEnabled=${aiEnabled}&removeSign=${removeSign}&resolved=${resolved}&fp=${fingerprint}&ua=${encodeURIComponent(userAgent)}`;
+    iframe.src = `https://cdn.flex-chat.net/widget.html?siteId=${siteId}&sessionId=${sessionId}&aiEnabled=${aiEnabled}&removeSign=${removeSign}&resolved=${resolved}&fp=${fingerprint}&ua=${encodeURIComponent(userAgent)}&email=${encodeURIComponent(visitorEmail)}`;
     // iframe.allowFullscreen = true;
     iframe.setAttribute("allow", "fullscreen");
     iframe.style.position = "fixed";
@@ -279,6 +317,16 @@
 
         updateButtonIcon();
         updateButtonVisibility();
+      }
+
+      if (e.data && e.data.type === "MYCHAT_EMAIL") {
+        const nextEmail = persistEmail(e.data.email);
+        if (!nextEmail || nextEmail === visitorEmail) return;
+
+        visitorEmail = nextEmail;
+        requestWidgetAccess(visitorEmail).catch(() =>
+          console.log("Access check failed"),
+        );
       }
     });
 
