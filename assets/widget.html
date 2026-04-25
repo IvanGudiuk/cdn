@@ -136,6 +136,22 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
       }
 
+      .message a {
+        color: #2563eb;
+        font-weight: 500;
+        text-decoration: underline;
+        word-break: break-all;
+      }
+
+      .message.visitor a {
+        color: #ffffff;
+        opacity: 0.9;
+      }
+
+      .message a:hover {
+        opacity: 0.8;
+      }
+
       .chat-time {
         font-size: 11px;
         margin-top: 4px;
@@ -331,6 +347,60 @@
         padding: 5px 10px;
       }
 
+      .chat-composer.hidden,
+      .email-gate.hidden {
+        display: none;
+      }
+
+      .email-gate {
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        background: #fff;
+      }
+
+      .email-gate-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+
+      .email-gate-text {
+        margin: 4px 0 0;
+        font-size: 13px;
+        line-height: 1.5;
+        color: #5b6475;
+      }
+
+      .email-input-row {
+        display: flex;
+        gap: 8px;
+      }
+
+      #email-input {
+        width: 100%;
+        padding: 10px 12px;
+        border: none;
+        border-radius: 10px;
+        background-color: rgba(184, 182, 182, 0.1);
+        outline: none;
+        font-size: 14px;
+      }
+
+      .email-save-btn {
+        min-width: 92px;
+        height: 40px;
+        padding: 0 14px;
+        border-radius: 10px;
+      }
+
+      .email-error {
+        min-height: 18px;
+        font-size: 12px;
+        color: #b91c1c;
+      }
+
       #chat-input {
         display: block;
         width: 100%;
@@ -476,83 +546,106 @@
 
       <div class="footer">
         <div class="input-wrap">
-          <textarea
-            id="chat-input"
-            placeholder="Type a message..."
-            rows="1"
-            maxlength="800"
-          ></textarea>
-          <div class="chat-input-wrapper">
-            <div class="emoji-wrapper">
-              <button
-                id="attachBtn"
-                type="button"
-                class="attach-btn"
-                title="attach file"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 48 50"
-                  id="Attach--Streamline-Ionic-Filled"
-                  height="18"
-                  width="18"
-                >
-                  <path
-                    fill="#000000"
-                    fill-rule="evenodd"
-                    d="M16.7254 1.2676C17.9698 0.7477 19.3051 0.48 20.6536 0.48s2.684 0.2677 3.9283 0.7876 2.3733 1.2816 3.321 2.2409c0.9478 0.9594 1.6958 2.0974 2.2006 3.348 0.5032 1.247 0.7547 2.5813 0.7399 3.9258l-0.0158 22.8943 -0.0002 0.0146c-0.0283 1.7868 -0.7579 3.491 -2.0313 4.7445 -1.2736 1.2537 -2.9891 1.9562 -4.7761 1.9562 -1.7869 0 -3.5022 -0.7025 -4.7759 -1.9562 -1.2735 -1.2535 -2.0031 -2.9577 -2.0315 -4.7445l-0.0002 -0.0152V16.1971c0 -1.0728 0.8698 -1.9424 1.9424 -1.9424 1.0729 0 1.9425 0.8697 1.9425 1.9424v17.4462c0.0155 0.7624 0.3284 1.4887 0.872 2.0238 0.5469 0.5383 1.2834 0.8399 2.0507 0.8399 0.7674 0 1.504 -0.3016 2.0508 -0.8399 0.5438 -0.5352 0.8566 -1.2617 0.8721 -2.0243l0.0158 -22.8848 0.0001 -0.0111c0.0101 -0.8344 -0.1456 -1.6626 -0.4578 -2.4364 -0.3125 -0.7739 -0.7751 -1.4781 -1.3616 -2.0718 -0.5865 -0.5935 -1.2852 -1.0649 -2.055 -1.3865 -0.7701 -0.3217 -1.5963 -0.4874 -2.4308 -0.4874 -0.8344 0 -1.6606 0.1657 -2.4307 0.4874 -0.7699 0.3216 -1.4685 0.793 -2.055 1.3865 -0.5865 0.5937 -1.0492 1.2979 -1.3617 2.0718 -0.3122 0.7738 -0.4678 1.602 -0.4577 2.4364l0.0001 0.0117v23.0703l-0.0001 0.014c-0.0186 1.2793 0.2174 2.5494 0.6942 3.7366 0.4767 1.1872 1.1848 2.2677 2.0827 3.1789 0.8982 0.9112 1.9683 1.6348 3.1486 2.1286 1.1801 0.4939 2.4467 0.7481 3.7259 0.7481 1.2796 0 2.5461 -0.2542 3.7263 -0.7481 1.1802 -0.4938 2.2504 -1.2174 3.1484 -2.1286 0.8981 -0.9112 1.606 -1.9917 2.0829 -3.1789 0.4766 -1.1872 0.7127 -2.4573 0.6942 -3.7366l-0.0003 -0.014V12.2806c0 -1.0726 0.8697 -1.9424 1.9423 -1.9424 1.0729 0 1.9425 0.8698 1.9425 1.9424v21.5207c0.0241 1.7891 -0.3069 3.5653 -0.9737 5.2258 -0.6686 1.665 -1.6616 3.1805 -2.921 4.4583 -1.2595 1.2779 -2.7605 2.2928 -4.4157 2.9853C27.5707 47.1632 25.7942 47.52 24 47.52c-1.7942 0 -3.5705 -0.3568 -5.2257 -1.0493 -1.6551 -0.6926 -3.1562 -1.7074 -4.4156 -2.9853 -1.2595 -1.2778 -2.2525 -2.7933 -2.921 -4.4583 -0.6669 -1.6605 -0.9978 -3.4368 -0.9738 -5.2258V10.7816c-0.0147 -1.3443 0.2368 -2.6783 0.7399 -3.9251 0.5049 -1.2506 1.2527 -2.3886 2.2005 -3.348 0.9478 -0.9593 2.0768 -1.721 3.3211 -2.2409Z"
-                    clip-rule="evenodd"
-                    stroke-width="1"
-                  ></path>
-                </svg>
-              </button>
-
+          <div id="email-gate" class="email-gate hidden">
+            <div>
+              <div class="email-gate-title">Enter your email to start</div>
+              <p class="email-gate-text">
+                Please leave your email so we can identify your conversation and
+                continue helping you if the chat is interrupted.
+              </p>
+            </div>
+            <div class="email-input-row">
               <input
-                id="fileInput"
-                type="file"
-                style="display: none"
-                accept="image/*,video/*,.pdf,.doc,.docx,.txt"
+                id="email-input"
+                type="email"
+                placeholder="name@example.com"
+                autocomplete="email"
               />
-              <button
-                id="emojiBtn"
-                type="button"
-                class="attach-btn"
-                title="emoji"
-              >
-                😊
+              <button id="email-save-btn" type="button" class="email-save-btn">
+                Continue
               </button>
             </div>
+            <div id="email-error" class="email-error" aria-live="polite"></div>
+          </div>
+          <div id="chat-composer" class="chat-composer hidden">
+            <textarea
+              id="chat-input"
+              placeholder="Type a message..."
+              rows="1"
+              maxlength="800"
+            ></textarea>
+            <div class="chat-input-wrapper">
+              <div class="emoji-wrapper">
+                <button
+                  id="attachBtn"
+                  type="button"
+                  class="attach-btn"
+                  title="attach file"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 48 50"
+                    id="Attach--Streamline-Ionic-Filled"
+                    height="18"
+                    width="18"
+                  >
+                    <path
+                      fill="#000000"
+                      fill-rule="evenodd"
+                      d="M16.7254 1.2676C17.9698 0.7477 19.3051 0.48 20.6536 0.48s2.684 0.2677 3.9283 0.7876 2.3733 1.2816 3.321 2.2409c0.9478 0.9594 1.6958 2.0974 2.2006 3.348 0.5032 1.247 0.7547 2.5813 0.7399 3.9258l-0.0158 22.8943 -0.0002 0.0146c-0.0283 1.7868 -0.7579 3.491 -2.0313 4.7445 -1.2736 1.2537 -2.9891 1.9562 -4.7761 1.9562 -1.7869 0 -3.5022 -0.7025 -4.7759 -1.9562 -1.2735 -1.2535 -2.0031 -2.9577 -2.0315 -4.7445l-0.0002 -0.0152V16.1971c0 -1.0728 0.8698 -1.9424 1.9424 -1.9424 1.0729 0 1.9425 0.8697 1.9425 1.9424v17.4462c0.0155 0.7624 0.3284 1.4887 0.872 2.0238 0.5469 0.5383 1.2834 0.8399 2.0507 0.8399 0.7674 0 1.504 -0.3016 2.0508 -0.8399 0.5438 -0.5352 0.8566 -1.2617 0.8721 -2.0243l0.0158 -22.8848 0.0001 -0.0111c0.0101 -0.8344 -0.1456 -1.6626 -0.4578 -2.4364 -0.3125 -0.7739 -0.7751 -1.4781 -1.3616 -2.0718 -0.5865 -0.5935 -1.2852 -1.0649 -2.055 -1.3865 -0.7701 -0.3217 -1.5963 -0.4874 -2.4308 -0.4874 -0.8344 0 -1.6606 0.1657 -2.4307 0.4874 -0.7699 0.3216 -1.4685 0.793 -2.055 1.3865 -0.5865 0.5937 -1.0492 1.2979 -1.3617 2.0718 -0.3122 0.7738 -0.4678 1.602 -0.4577 2.4364l0.0001 0.0117v23.0703l-0.0001 0.014c-0.0186 1.2793 0.2174 2.5494 0.6942 3.7366 0.4767 1.1872 1.1848 2.2677 2.0827 3.1789 0.8982 0.9112 1.9683 1.6348 3.1486 2.1286 1.1801 0.4939 2.4467 0.7481 3.7259 0.7481 1.2796 0 2.5461 -0.2542 3.7263 -0.7481 1.1802 -0.4938 2.2504 -1.2174 3.1484 -2.1286 0.8981 -0.9112 1.606 -1.9917 2.0829 -3.1789 0.4766 -1.1872 0.7127 -2.4573 0.6942 -3.7366l-0.0003 -0.014V12.2806c0 -1.0726 0.8697 -1.9424 1.9423 -1.9424 1.0729 0 1.9425 0.8698 1.9425 1.9424v21.5207c0.0241 1.7891 -0.3069 3.5653 -0.9737 5.2258 -0.6686 1.665 -1.6616 3.1805 -2.921 4.4583 -1.2595 1.2779 -2.7605 2.2928 -4.4157 2.9853C27.5707 47.1632 25.7942 47.52 24 47.52c-1.7942 0 -3.5705 -0.3568 -5.2257 -1.0493 -1.6551 -0.6926 -3.1562 -1.7074 -4.4156 -2.9853 -1.2595 -1.2778 -2.2525 -2.7933 -2.921 -4.4583 -0.6669 -1.6605 -0.9978 -3.4368 -0.9738 -5.2258V10.7816c-0.0147 -1.3443 0.2368 -2.6783 0.7399 -3.9251 0.5049 -1.2506 1.2527 -2.3886 2.2005 -3.348 0.9478 -0.9593 2.0768 -1.721 3.3211 -2.2409Z"
+                      clip-rule="evenodd"
+                      stroke-width="1"
+                    ></path>
+                  </svg>
+                </button>
 
-            <div id="filePreview" class="file-preview"></div>
-            <button
-              class="send-btn"
-              aria-label="Send message"
-              title="send message"
-            >
-              <svg
-                viewBox="0 0 22 22"
-                width="16"
-                height="16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+                <input
+                  id="fileInput"
+                  type="file"
+                  style="display: none"
+                  accept="image/*,video/*,.pdf,.doc,.docx,.txt"
+                />
+                <button
+                  id="emojiBtn"
+                  type="button"
+                  class="attach-btn"
+                  title="emoji"
+                >
+                  😊
+                </button>
+              </div>
+
+              <div id="filePreview" class="file-preview"></div>
+              <button
+                class="send-btn"
+                aria-label="Send message"
+                title="send message"
               >
-                <path
-                  d="M22 2L11 13"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-                <path
-                  d="M22 2L15 22L11 13L2 9L22 2Z"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </button>
+                <svg
+                  viewBox="0 0 22 22"
+                  width="16"
+                  height="16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M22 2L11 13"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M22 2L15 22L11 13L2 9L22 2Z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
         <div class="powered">
@@ -664,6 +757,9 @@
     <script>
       const STORAGE_KEY = "mychat_session";
       const MESSAGES_KEY = "mychat_messages";
+      const EMAIL_STORAGE_KEY = "mychat_email";
+      const EMAIL_COOKIE_KEY = "mychat_email";
+      const EMAIL_COOKIE_DAYS = 30;
 
       const params = new URLSearchParams(window.location.search);
       const siteId = params.get("siteId");
@@ -681,6 +777,30 @@
           document.cookie =
             name + "=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;";
         });
+      }
+
+      function getCookie(name) {
+        const cookies = document.cookie ? document.cookie.split("; ") : [];
+        const match = cookies.find((cookie) => cookie.startsWith(`${name}=`));
+        return match
+          ? decodeURIComponent(match.split("=").slice(1).join("="))
+          : "";
+      }
+
+      function setCookie(name, value, days = EMAIL_COOKIE_DAYS) {
+        const expires = new Date(
+          Date.now() + days * 24 * 60 * 60 * 1000,
+        ).toUTCString();
+
+        document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires};path=/;SameSite=Lax`;
+      }
+
+      function normalizeEmail(email) {
+        return email.trim().toLowerCase();
+      }
+
+      function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
       }
 
       if (removeSign) {
@@ -703,6 +823,7 @@
       // ---------- SESSION INIT ----------
       let session = JSON.parse(localStorage.getItem(STORAGE_KEY));
       let messages = JSON.parse(localStorage.getItem(MESSAGES_KEY)) || [];
+      let visitorEmail = "";
 
       if (resolved || session?.resolved) {
         localStorage.removeItem(STORAGE_KEY);
@@ -714,6 +835,73 @@
       }
 
       const messagesContainer = document.querySelector(".messages");
+      const emailGate = document.getElementById("email-gate");
+      const emailInput = document.getElementById("email-input");
+      const emailSaveBtn = document.getElementById("email-save-btn");
+      const emailError = document.getElementById("email-error");
+      const composer = document.getElementById("chat-composer");
+
+      function persistVisitorEmail(email) {
+        visitorEmail = normalizeEmail(email);
+        localStorage.setItem(EMAIL_STORAGE_KEY, visitorEmail);
+        setCookie(EMAIL_COOKIE_KEY, visitorEmail);
+      }
+
+      function hydrateVisitorEmail() {
+        const localEmail = normalizeEmail(
+          localStorage.getItem(EMAIL_STORAGE_KEY) || "",
+        );
+        const cookieEmail = normalizeEmail(getCookie(EMAIL_COOKIE_KEY) || "");
+        const resolvedEmail = localEmail || cookieEmail;
+
+        if (resolvedEmail) {
+          persistVisitorEmail(resolvedEmail);
+        }
+
+        return resolvedEmail;
+      }
+
+      function setEmailError(message = "") {
+        if (!emailError) return;
+        emailError.textContent = message;
+      }
+
+      function toggleChatAvailability(hasEmail) {
+        emailGate?.classList.toggle("hidden", hasEmail);
+        composer?.classList.toggle("hidden", !hasEmail);
+      }
+
+      function emitJoin() {
+        if (
+          !socket.connected ||
+          !session?.sessionId ||
+          !siteId ||
+          !visitorEmail
+        ) {
+          return;
+        }
+
+        socket.emit("join", {
+          sessionId: session?.sessionId || null,
+          siteId,
+          fingerprint,
+          userAgent,
+          role: "visitor",
+          email: visitorEmail,
+        });
+      }
+
+      function unlockChatWithEmail(email) {
+        persistVisitorEmail(email);
+        setEmailError("");
+        toggleChatAvailability(true);
+        if (emailInput) {
+          emailInput.value = visitorEmail;
+        }
+        emitJoin();
+      }
+
+      visitorEmail = hydrateVisitorEmail();
 
       if (!session) {
         session = {
@@ -756,13 +944,7 @@
 
       // ---------- JOIN SOCKET ROOM ----------
       socket.on("connect", () => {
-        socket.emit("join", {
-          sessionId: session?.sessionId || null,
-          siteId,
-          fingerprint,
-          userAgent,
-          role: "visitor",
-        });
+        emitJoin();
       });
 
       socket.on("message", (msg) => {
@@ -779,23 +961,63 @@
 
       const msgInput = document.getElementById("chat-input");
       const sendBtn = document.querySelector(".send-btn");
+      const attachBtn = document.getElementById("attachBtn");
+      const fileInput = document.getElementById("fileInput");
+      const composerEmojiBtn = document.getElementById("emojiBtn");
       let typingStopTimeout = null;
 
+      toggleChatAvailability(Boolean(visitorEmail));
+      msgInput.disabled = !visitorEmail;
+      sendBtn.disabled = !visitorEmail;
+
+      if (!visitorEmail) {
+        emailInput?.focus();
+      }
+
+      emailSaveBtn?.addEventListener("click", () => {
+        const nextEmail = normalizeEmail(emailInput?.value || "");
+
+        if (!isValidEmail(nextEmail)) {
+          setEmailError(
+            "Please enter a valid email address to start the chat.",
+          );
+          emailInput?.focus();
+          return;
+        }
+
+        unlockChatWithEmail(nextEmail);
+        msgInput.disabled = false;
+        sendBtn.disabled = false;
+        attachBtn && (attachBtn.disabled = false);
+        composerEmojiBtn && (composerEmojiBtn.disabled = false);
+        fileInput && (fileInput.disabled = false);
+        msgInput.focus();
+      });
+
+      emailInput?.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          emailSaveBtn?.click();
+        }
+      });
+
       function emitVisitorTyping() {
-        if (!session?.sessionId || !siteId) return;
+        if (!session?.sessionId || !siteId || !visitorEmail) return;
         socket.emit("visitor_typing", {
           sessionId: session.sessionId,
           siteId,
           sender: "visitor",
+          email: visitorEmail,
         });
       }
 
       function emitVisitorTypingStopped() {
-        if (!session?.sessionId || !siteId) return;
+        if (!session?.sessionId || !siteId || !visitorEmail) return;
         socket.emit("visitor_typing_stopped", {
           sessionId: session.sessionId,
           siteId,
           sender: "visitor",
+          email: visitorEmail,
         });
       }
 
@@ -835,6 +1057,45 @@
         return `${day}.${month} ${timePart}`;
       }
 
+      function escapeHtml(text) {
+        return text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+      }
+
+      function linkify(text) {
+        if (!text) return "";
+
+        // 1. сначала экранируем HTML (защита)
+        let safe = escapeHtml(text);
+
+        // 2. ссылки http/https
+        safe = safe.replace(/(https?:\/\/[^\s<]+)/g, (url) => {
+          const display = url.length > 50 ? url.slice(0, 47) + "..." : url;
+          return `<a href="${url}" target="_blank" rel="noopener noreferrer">${display}</a>`;
+        });
+
+        // 3. www без протокола
+        safe = safe.replace(
+          /(^|[^\/])(www\.[^\s<]+)/g,
+          (match, prefix, url) => {
+            const fullUrl = "https://" + url;
+            const display = url.length > 50 ? url.slice(0, 47) + "..." : url;
+            return `${prefix}<a href="${fullUrl}" target="_blank" rel="noopener noreferrer">${display}</a>`;
+          },
+        );
+
+        // 4. email
+        safe = safe.replace(
+          /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-z]{2,})/g,
+          (email) => {
+            return `<a href="mailto:${email}">${email}</a>`;
+          },
+        );
+
+        return safe;
+      }
       // ---------- RENDER MESSAGE ----------
       function renderMessage(message) {
         if (!message || !message.content) {
@@ -870,7 +1131,7 @@
 
         // === КОНТЕНТ ===
         if (type === "text") {
-          bubble.textContent = text || "";
+          bubble.innerHTML = linkify(text || "");
         }
 
         if (type === "video" && file?.url) {
@@ -972,6 +1233,15 @@
       });
 
       function sendMessage() {
+        if (!visitorEmail) {
+          toggleChatAvailability(false);
+          setEmailError("Please enter your email before sending a message.");
+          msgInput.disabled = true;
+          sendBtn.disabled = true;
+          emailInput?.focus();
+          return;
+        }
+
         const text = msgInput.value.trim();
         if (!text) return;
 
@@ -1000,6 +1270,7 @@
           content: { type: "text", text, file: null },
           sender: "visitor",
           siteId,
+          email: visitorEmail,
           status: "sent",
           createdAt: new Date().toISOString(),
           sessionId: session?.sessionId,
@@ -1056,10 +1327,6 @@
       });
     </script>
     <script>
-      const fileInput = document.getElementById("fileInput");
-
-      const attachBtn = document.getElementById("attachBtn");
-
       function createUploadStatusMessage(text, isError = false) {
         const wrapper = document.createElement("div");
         wrapper.className = "chat-message";
@@ -1086,6 +1353,7 @@
           sender: "visitor",
           sessionId: session.sessionId,
           siteId,
+          email: visitorEmail,
           createdAt: new Date().toISOString(),
           content: {
             type: messageType,
@@ -1130,10 +1398,24 @@
       //     }
       if (attachBtn && fileInput) {
         attachBtn.addEventListener("click", () => {
+          if (!visitorEmail) {
+            toggleChatAvailability(false);
+            setEmailError("Please enter your email before sending files.");
+            emailInput?.focus();
+            return;
+          }
           fileInput.click();
         });
 
         fileInput.addEventListener("change", async () => {
+          if (!visitorEmail) {
+            toggleChatAvailability(false);
+            setEmailError("Please enter your email before sending files.");
+            emailInput?.focus();
+            fileInput.value = "";
+            return;
+          }
+
           const file = fileInput.files[0];
           if (!file) return;
 
@@ -1208,6 +1490,7 @@
               sender: "visitor",
               siteId,
               sessionId: session.sessionId,
+              email: visitorEmail,
               createdAt: new Date().toISOString(),
               content: {
                 type: messageType,
