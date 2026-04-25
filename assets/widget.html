@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <title>MyChat Widget</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Previous Picmo stylesheet kept for reference. -->
+    <!-- <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/picmo@5.8.5/dist/index.css"
+    /> -->
 
     <style>
       :root {
@@ -180,6 +185,7 @@
         padding: 10px;
         background: #fff;
         border-top: 1px solid #e5e7f2;
+        position: relative;
       }
 
       .input-wrap {
@@ -426,6 +432,46 @@
         font-size: 16px !important;
       }
 
+      /* Previous Picmo-specific styles kept for reference.
+      .picmo__popupContainer {
+        z-index: 10000 !important;
+      }
+
+      .picmo__searchInput {
+        font-size: 16px !important;
+      }
+      */
+
+      .emoji-popover {
+        position: absolute;
+        right: 10px;
+        bottom: calc(100% + 8px);
+        width: min(320px, calc(100% - 20px));
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+        overflow: hidden;
+        z-index: 10000;
+      }
+
+      .emoji-popover.hidden {
+        display: none;
+      }
+
+      .emoji-popover emoji-picker {
+        width: 100%;
+        height: 340px;
+        border: none;
+      }
+
+      @media (max-width: 480px) {
+        .emoji-popover {
+          left: 10px;
+          right: 10px;
+          width: auto;
+        }
+      }
+
       .file-preview {
         margin-top: 8px;
       }
@@ -653,6 +699,9 @@
             </div>
           </div>
         </div>
+        <div id="emojiPopover" class="emoji-popover hidden">
+          <emoji-picker id="emojiPicker"></emoji-picker>
+        </div>
         <div class="powered">
           <a
             href="https://flex-chat.net"
@@ -670,9 +719,13 @@
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <script type="module">
       import heic2any from "https://cdn.jsdelivr.net/npm/heic2any@0.0.4/+esm";
-      import { EmojiButton } from "https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4/+esm";
+      import "https://cdn.jsdelivr.net/npm/emoji-picker-element@1.26.1/index.js";
 
       window.heic2any = heic2any;
+
+      // Previous emoji-button implementation kept for reference.
+      /*
+      import { EmojiButton } from "https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4/+esm";
 
       const emojiBtn = document.getElementById("emojiBtn");
       const textar = document.getElementById("chat-input");
@@ -787,6 +840,77 @@
           }
         });
       }
+      */
+
+      // Previous Picmo implementation kept for reference.
+      // const emojiBtn = document.getElementById("emojiBtn");
+      // const textar = document.getElementById("chat-input");
+      // const isMobileEmojiUi = window.matchMedia(
+      //   "(max-width: 480px), (hover: none) and (pointer: coarse)",
+      // ).matches;
+      //
+      // const emojiPicker = createPopup(
+      //   {
+      //     showPreview: false,
+      //     showSearch: !isMobileEmojiUi,
+      //   },
+      //   {
+      //     triggerElement: emojiBtn,
+      //     referenceElement: emojiBtn,
+      //     position: "top-end",
+      //   },
+      // );
+      //
+      // emojiPicker.addEventListener("emoji:select", (event) => {
+      //   insertAtCursor(textar, event.emoji);
+      // });
+      //
+      // emojiPicker.addEventListener("picker:close", () => {
+      //   emojiBtn.blur();
+      // });
+
+      const emojiBtn = document.getElementById("emojiBtn");
+      const textar = document.getElementById("chat-input");
+      const emojiPopover = document.getElementById("emojiPopover");
+      const emojiPicker = document.getElementById("emojiPicker");
+      let emojiPopoverOpen = false;
+
+      function setEmojiPopoverOpen(isOpen) {
+        emojiPopoverOpen = isOpen;
+        emojiPopover.classList.toggle("hidden", !isOpen);
+
+        if (isOpen) {
+          emojiBtn.setAttribute("aria-expanded", "true");
+        } else {
+          emojiBtn.setAttribute("aria-expanded", "false");
+          emojiBtn.blur();
+        }
+      }
+
+      emojiBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        setEmojiPopoverOpen(!emojiPopoverOpen);
+      });
+
+      emojiPicker.addEventListener("emoji-click", (event) => {
+        insertAtCursor(textar, event.detail.unicode);
+        setEmojiPopoverOpen(false);
+      });
+
+      document.addEventListener(
+        "pointerdown",
+        (event) => {
+          if (!emojiPopoverOpen) return;
+
+          const path = event.composedPath();
+          if (path.includes(emojiBtn) || path.includes(emojiPopover)) {
+            return;
+          }
+
+          setEmojiPopoverOpen(false);
+        },
+        true,
+      );
 
       function insertAtCursor(el, text) {
         const start = el.selectionStart;
