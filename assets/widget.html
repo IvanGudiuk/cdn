@@ -871,11 +871,53 @@
 
       const emojiBtn = document.getElementById("emojiBtn");
       const textar = document.getElementById("chat-input");
+      const widgetRoot = document.querySelector(".widget");
       const emojiPopover = document.getElementById("emojiPopover");
       const emojiPicker = document.getElementById("emojiPicker");
+      const isMobileEmojiUi = window.matchMedia(
+        "(max-width: 480px), (hover: none) and (pointer: coarse)",
+      ).matches;
       let emojiPopoverOpen = false;
 
-      function setEmojiPopoverOpen(isOpen) {
+      function blurEmojiPickerFocus() {
+        const shadowRoot = emojiPicker.shadowRoot;
+        const shadowActiveElement = shadowRoot?.activeElement;
+
+        if (shadowActiveElement instanceof HTMLElement) {
+          shadowActiveElement.blur();
+        }
+
+        const shadowInput = shadowRoot?.querySelector(
+          "input, textarea, button, [tabindex]",
+        );
+
+        if (shadowInput instanceof HTMLElement) {
+          shadowInput.blur();
+        }
+      }
+
+      function refreshTextareaUi(restoreFocus = false) {
+        const placeholder =
+          textar.getAttribute("placeholder") || "Type a message...";
+
+        textar.style.height = "auto";
+        textar.setAttribute("placeholder", "");
+        void textar.offsetHeight;
+
+        requestAnimationFrame(() => {
+          textar.setAttribute("placeholder", placeholder);
+          textar.dispatchEvent(new Event("input", { bubbles: true }));
+
+          if (restoreFocus) {
+            textar.focus({ preventScroll: true });
+            const caretPosition = textar.value.length;
+            textar.setSelectionRange(caretPosition, caretPosition);
+          }
+        });
+      }
+
+      function setEmojiPopoverOpen(isOpen, options = {}) {
+        const { restoreFocus = false } = options;
         emojiPopoverOpen = isOpen;
         emojiPopover.classList.toggle("hidden", !isOpen);
 
@@ -884,6 +926,13 @@
         } else {
           emojiBtn.setAttribute("aria-expanded", "false");
           emojiBtn.blur();
+
+          if (isMobileEmojiUi) {
+            blurEmojiPickerFocus();
+            window.setTimeout(() => {
+              refreshTextareaUi(restoreFocus);
+            }, 0);
+          }
         }
       }
 
@@ -894,7 +943,7 @@
 
       emojiPicker.addEventListener("emoji-click", (event) => {
         insertAtCursor(textar, event.detail.unicode);
-        setEmojiPopoverOpen(false);
+        setEmojiPopoverOpen(false, { restoreFocus: true });
       });
 
       document.addEventListener(
@@ -911,6 +960,20 @@
         },
         true,
       );
+
+      if (isMobileEmojiUi) {
+        textar.addEventListener("focus", () => {
+          if (emojiPopoverOpen) {
+            setEmojiPopoverOpen(false);
+          }
+        });
+
+        widgetRoot?.addEventListener("scroll", () => {
+          if (emojiPopoverOpen) {
+            setEmojiPopoverOpen(false);
+          }
+        });
+      }
 
       function insertAtCursor(el, text) {
         const start = el.selectionStart;
