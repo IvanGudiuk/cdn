@@ -420,6 +420,12 @@
         z-index: 9999 !important;
       }
 
+      .emoji-picker input,
+      .emoji-picker textarea,
+      .emoji-picker select {
+        font-size: 16px !important;
+      }
+
       .file-preview {
         margin-top: 8px;
       }
@@ -670,6 +676,9 @@
 
       const emojiBtn = document.getElementById("emojiBtn");
       const textar = document.getElementById("chat-input");
+      const isMobileEmojiUi = window.matchMedia(
+        "(max-width: 480px), (hover: none) and (pointer: coarse)",
+      ).matches;
 
       // const picker = new EmojiButton({
       //   position: "top-start",
@@ -683,7 +692,7 @@
         showPreview: false,
         autoHide: true,
         showRecents: true,
-        showSearch: true,
+        showSearch: !isMobileEmojiUi,
         showVariants: true,
         showAnimation: false,
         zIndex: 10000,
