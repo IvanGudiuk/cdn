@@ -54,6 +54,18 @@
     return storedEmail;
   }
 
+  function clearVisitorEmail() {
+    try {
+      localStorage.removeItem(EMAIL_STORAGE_KEY);
+    } catch (e) {
+      /* ignore */
+    }
+    const isSecure = location.protocol === "https:";
+    document.cookie = `${EMAIL_COOKIE_KEY}=; path=/; max-age=0${
+      isSecure ? "; SameSite=None; Secure" : ""
+    }`;
+  }
+
   if (!siteId) {
     console.log("No site ID, widget will not render");
     return;
@@ -150,6 +162,11 @@
       aiEnabled = !!data.aiEnabled;
       removeSign = !!data.removeSign;
       resolved = !!data.resolved;
+
+      if (resolved) {
+        clearVisitorEmail();
+        visitorEmail = "";
+      }
 
       if (Array.isArray(data.messages)) {
         try {

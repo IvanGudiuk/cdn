@@ -1110,9 +1110,12 @@
       let messages = JSON.parse(localStorage.getItem(MESSAGES_KEY)) || [];
       let visitorEmail = "";
 
+      const sessionHadResolved = !!(session && session.resolved);
+
       if (resolved || session?.resolved) {
         localStorage.removeItem(STORAGE_KEY);
         localStorage.removeItem(MESSAGES_KEY);
+        localStorage.removeItem(EMAIL_STORAGE_KEY);
 
         clearCookies();
 
@@ -1188,7 +1191,12 @@
       }
 
       visitorEmail = hydrateVisitorEmail();
-      if (!visitorEmail && emailFromParent) {
+      if (
+        !visitorEmail &&
+        emailFromParent &&
+        !resolved &&
+        !sessionHadResolved
+      ) {
         persistVisitorEmail(emailFromParent);
         visitorEmail = normalizeEmail(emailFromParent);
       }
